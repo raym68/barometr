@@ -24,7 +24,6 @@
     const $ = id => document.getElementById(id);
     let lastReading = null;
     let ground = null;
-    try { ground = JSON.parse(localStorage.getItem('groundCalibration')); } catch (_) {}
     const fmt = n => new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 1}).format(n);
     function render() {
       if (!lastReading) return;
@@ -96,7 +95,6 @@
     $('calibrate').addEventListener('click', () => {
       if (lastReading?.kind !== 'device') return;
       ground = {height: lastReading.height, latitude: lastReading.latitude, longitude: lastReading.longitude, time: Date.now()};
-      try { localStorage.setItem('groundCalibration', JSON.stringify(ground)); } catch (_) {}
       $('status').textContent = 'Уровень земли сохранён. Поднимитесь и нажмите «Определить высоту» ещё раз.';
       render();
     });
