@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102c3a">
+  <meta name="description" content="Узнайте примерную высоту своего местоположения над уровнем моря.">
+  <title>Моя высота</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f4f9f7;background:#102c3a}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 10%,#315d61 0,transparent 38%),linear-gradient(150deg,#102c3a,#14333d 58%,#0a2533)}.shell{max-width:980px;margin:auto;padding:32px 24px 72px}.top{display:flex;justify-content:space-between;align-items:center;gap:20px}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:.04em}.mark{width:38px;height:38px;border:1px solid #a0d2bc;border-radius:12px;display:grid;place-items:center;color:#a5e1c1;font-size:22px}.pill{border:1px solid #618882;border-radius:999px;padding:8px 13px;color:#b7d1ce;font-size:12px}.hero{padding:80px 0 34px}.eyebrow{color:#b2e6cc;text-transform:uppercase;letter-spacing:.19em;font-size:12px;font-weight:700}h1{font-size:clamp(42px,8vw,82px);line-height:1.02;letter-spacing:-.065em;margin:17px 0 18px;max-width:800px}p{line-height:1.65;color:#bfd0d0}.intro{font-size:18px;max-width:600px}.grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(250px,.8fr);gap:18px}.card{background:#f5f8f3;color:#143640;border-radius:26px;padding:32px;box-shadow:0 20px 60px #061b2740}.card p{color:#5b7379}.label{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#577879;font-weight:700}.value{font-size:clamp(68px,12vw,126px);font-weight:750;line-height:1;letter-spacing:-.085em;margin:28px 0 6px;font-variant-numeric:tabular-nums}.unit{font-size:28px;letter-spacing:-.03em;color:#577879;margin-left:8px}.method{font-weight:650;margin:0}.status{min-height:52px;margin:12px 0 24px}.button{border:0;border-radius:14px;background:#d6f48d;color:#183838;font:inherit;font-weight:750;padding:16px 22px;cursor:pointer;min-height:52px}.button:hover{background:#e2ffa5}.button:disabled{opacity:.6;cursor:wait}.small{font-size:13px}.side{background:#234550;color:#f4f9f7}.side p{color:#c1d3d0}.side .label{color:#a8dcbf}.field{margin-top:28px}label{display:block;font-weight:650;font-size:14px;margin-bottom:9px}input{width:100%;background:#163540;border:1px solid #789895;border-radius:12px;color:white;font:inherit;padding:14px}input:focus{outline:2px solid #d6f48d}.details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}.detail{border-top:1px solid #d2dfd9;padding-top:16px}.detail strong{display:block;font-size:16px;margin-top:6px;font-variant-numeric:tabular-nums}.note{margin-top:22px;border-top:1px solid #61827f;padding-top:22px;font-size:13px}footer{font-size:12px;color:#a8c1c0;margin-top:26px}a{color:inherit}@media(max-width:700px){.shell{padding:22px 16px 50px}.hero{padding:65px 0 24px}.grid{grid-template-columns:1fr}.card{padding:26px}.pill{display:none}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top"><div class="brand"><span class="mark">⌁</span><span>БАРРОМЕТР</span></div><span class="pill">Персональный высотомер</span></header>
+    <section class="hero"><div class="eyebrow">Ваше место на карте высот</div><h1>На какой высоте вы сейчас?</h1><p class="intro">Разрешите доступ к геолокации — покажем высоту устройства, если она доступна, или высоту поверхности в вашей точке.</p></section>
+    <section class="grid" aria-label="Показания высоты">
+      <div class="card" aria-live="polite"><div class="label">Высота над уровнем моря</div><div class="value"><span id="height">—</span><span class="unit">м</span></div><p class="method" id="method">Ожидаем измерение</p><p class="status" id="status">Нажмите кнопку, чтобы определить местоположение.</p><button class="button" id="locate">Определить высоту</button><div class="details"><div class="detail"><span class="label">Координаты</span><strong id="coords">—</strong></div><div class="detail"><span class="label">Точность позиции</span><strong id="accuracy">—</strong></div></div></div>
+      <aside class="card side"><div class="label">Как это работает</div><h2>Высота, которую можно проверить</h2><p>Если телефон передаёт высоту в браузер, показываем её. Иначе используем координаты и карту высот земной поверхности.</p><div class="field"><label for="offset">Дополнительная высота над землёй, м</label><input id="offset" type="number" inputmode="decimal" step="0.1" value="0" aria-describedby="offsetHelp"><p id="offsetHelp" class="small">Например, для этажа: 3 м на этаж. Учитывается только для карты рельефа.</p></div><p class="note" id="sourceNote">Высота по карте не определяет этаж и может отличаться от фактической высоты. Данные рельефа: Copernicus DEM GLO-90 через Open-Meteo.</p></aside>
+    </section>
+    <footer>Геолокация используется только для запроса высоты и не сохраняется на этом сайте. <a href="https://open-meteo.com/en/docs/elevation-api" target="_blank" rel="noopener">Источник данных о рельефе</a></footer>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    let lastReading = null;
+    const fmt = n => new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 1}).format(n);
+    function render() {
+      if (!lastReading) return;
+      const offset = Number($('offset').value);
+      const extra = Number.isFinite(offset) ? offset : 0;
+      $('height').textContent = fmt(lastReading.height + (lastReading.kind === 'terrain' ? extra : 0));
+      $('method').textContent = lastReading.kind === 'device' ? 'Высота по геолокации устройства' : 'Оценка по карте рельефа' + (extra ? ' + высота над землёй' : '');
+      $('sourceNote').textContent = lastReading.kind === 'device'
+        ? 'Показание высоты передано браузером. Его точность зависит от устройства и условий приёма.'
+        : 'Высота поверхности взята из Copernicus DEM GLO-90 через Open-Meteo. Разрешение карты — около 90 м; высота здания определяется только введённой вами поправкой.';
+    }
+    async function handlePosition(position) {
+      const c = position.coords;
+      $('coords').textContent = `${c.latitude.toFixed(5)}°, ${c.longitude.toFixed(5)}°`;
+      $('accuracy').textContent = `±${fmt(c.accuracy)} м`;
+      if (Number.isFinite(c.altitude)) {
+        lastReading = {height: c.altitude, kind: 'device'};
+        $('status').textContent = c.altitudeAccuracy == null ? 'Точность высоты устройством не указана.' : `Точность высоты: ±${fmt(c.altitudeAccuracy)} м.`;
+        render(); return;
+      }
+      $('status').textContent = 'Высота устройством не передана. Загружаем карту рельефа…';
+      try {
+        const url = new URL('https://api.open-meteo.com/v1/elevation');
+        url.searchParams.set('latitude', c.latitude.toFixed(6));
+        url.searchParams.set('longitude', c.longitude.toFixed(6));
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Ответ сервиса: ' + response.status);
+        const data = await response.json();
+        if (!Number.isFinite(data.elevation?.[0])) throw new Error('Нет данных для этой точки');
+        lastReading = {height: data.elevation[0], kind: 'terrain'};
+        $('status').textContent = 'Это высота земли в вашей точке. Для здания добавьте высоту над землёй.';
+        render();
+      } catch (error) {
+        $('status').textContent = 'Не удалось получить высоту рельефа. Проверьте интернет и попробуйте снова.';
+      }
+    }
+    $('locate').addEventListener('click', () => {
+      if (!navigator.geolocation) { $('status').textContent = 'Этот браузер не поддерживает геолокацию.'; return; }
+      $('locate').disabled = true;
+      $('status').textContent = 'Определяем местоположение…';
+      navigator.geolocation.getCurrentPosition(
+        position => { $('locate').disabled = false; handlePosition(position); },
+        error => { $('locate').disabled = false; $('status').textContent = error.code === 1 ? 'Разрешите доступ к геолокации в настройках браузера и попробуйте снова.' : 'Местоположение не определено. Попробуйте ещё раз на телефоне с включённой геолокацией.'; },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 0}
+      );
+    });
+    $('offset').addEventListener('input', render);
+  </script>
+</body>
+</html>
