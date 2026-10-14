@@ -15,14 +15,16 @@
     <header class="top"><div class="brand"><span class="mark">⌁</span><span>БАРРОМЕТР</span></div><span class="pill">Персональный высотомер</span></header>
     <section class="hero"><div class="eyebrow">Ваше место на карте высот</div><h1>На какой высоте вы сейчас?</h1><p class="intro">Разрешите доступ к геолокации — покажем высоту устройства, если она доступна, или высоту поверхности в вашей точке.</p></section>
     <section class="grid" aria-label="Показания высоты">
-      <div class="card" aria-live="polite"><div class="label">Высота над уровнем моря</div><div class="value"><span id="height">—</span><span class="unit">м</span></div><p class="method" id="method">Ожидаем измерение</p><p class="status" id="status">Нажмите кнопку, чтобы определить местоположение.</p><button class="button" id="locate">Определить высоту</button><div class="details"><div class="detail"><span class="label">Координаты</span><strong id="coords">—</strong></div><div class="detail"><span class="label">Точность позиции</span><strong id="accuracy">—</strong></div></div></div>
-      <aside class="card side"><div class="label">Как это работает</div><h2>Высота, которую можно проверить</h2><p>Если телефон передаёт высоту в браузер, показываем её. Иначе используем координаты и карту высот земной поверхности.</p><div class="field"><label for="offset">Дополнительная высота над землёй, м</label><input id="offset" type="number" inputmode="decimal" step="0.1" value="0" aria-describedby="offsetHelp"><p id="offsetHelp" class="small">Например, для этажа: 3 м на этаж. Учитывается только для карты рельефа.</p></div><p class="note" id="sourceNote">Высота по карте не определяет этаж и может отличаться от фактической высоты. Данные рельефа: Copernicus DEM GLO-90 через Open-Meteo.</p></aside>
+      <div class="card" aria-live="polite"><div class="label">Высота над уровнем моря</div><div class="value"><span id="height">—</span><span class="unit">м</span></div><p class="method" id="method">Ожидаем измерение</p><p class="status" id="status">Нажмите кнопку, чтобы определить местоположение.</p><button class="button" id="locate">Определить высоту</button><div class="details"><div class="detail"><span class="label">Примерный этаж</span><strong id="floor">—</strong><span class="small" id="floorNote">Нужна калибровка на земле</span></div><div class="detail"><span class="label">Координаты</span><strong id="coords">—</strong><span class="small" id="accuracy"></span></div></div></div>
+      <aside class="card side"><div class="label">Как это работает</div><h2>Высота, которую можно проверить</h2><p>Если телефон передаёт высоту в браузер, показываем её. Иначе используем координаты и карту высот земной поверхности.</p><p>Для оценки этажа сначала измерьте высоту на первом этаже или у входа, затем нажмите «Запомнить уровень земли». После подъёма повторите измерение.</p><button class="button" id="calibrate" disabled>Запомнить уровень земли</button><div class="field"><label for="offset">Дополнительная высота над землёй, м</label><input id="offset" type="number" inputmode="decimal" step="0.1" value="0" aria-describedby="offsetHelp"><p id="offsetHelp" class="small">Если устройство не передаёт высоту, введите приблизительную высоту вручную. Расчёт этажа: около 3 м на этаж.</p></div><p class="note" id="sourceNote">Высота по карте не определяет этаж и может отличаться от фактической высоты. Данные рельефа: Copernicus DEM GLO-90 через Open-Meteo.</p></aside>
     </section>
     <footer>Геолокация используется только для запроса высоты и не сохраняется на этом сайте. <a href="https://open-meteo.com/en/docs/elevation-api" target="_blank" rel="noopener">Источник данных о рельефе</a></footer>
   </main>
   <script>
     const $ = id => document.getElementById(id);
     let lastReading = null;
+    let ground = null;
+    try { ground = JSON.parse(localStorage.getItem('groundCalibration')); } catch (_) {}
     const fmt = n => new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 1}).format(n);
     function render() {
       if (!lastReading) return;
@@ -30,16 +32,37 @@
       const extra = Number.isFinite(offset) ? offset : 0;
       $('height').textContent = fmt(lastReading.height + (lastReading.kind === 'terrain' ? extra : 0));
       $('method').textContent = lastReading.kind === 'device' ? 'Высота по геолокации устройства' : 'Оценка по карте рельефа' + (extra ? ' + высота над землёй' : '');
+      $('calibrate').disabled = lastReading.kind !== 'device';
+      if (lastReading.kind === 'terrain') {
+        $('floor').textContent = extra > 0 ? `≈ ${Math.max(1, Math.round(extra / 3) + 1)}` : '—';
+        $('floorNote').textContent = extra > 0 ? 'По введённой высоте, не измерен автоматически' : 'Высота устройства недоступна';
+      } else if (ground && Date.now() - ground.time < 30 * 60 * 1000 && distanceMetres(ground, lastReading) < 100) {
+        const difference = lastReading.height - ground.height;
+        $('floor').textContent = `≈ ${Math.max(1, Math.round(difference / 3) + 1)}`;
+        $('floorNote').textContent = lastReading.altitudeAccuracy == null || lastReading.altitudeAccuracy > 5
+          ? 'Очень приблизительно: точность высоты низкая или неизвестна'
+          : `Разница с уровнем земли: ${fmt(difference)} м`;
+      } else {
+        $('floor').textContent = '—';
+        $('floorNote').textContent = ground ? 'Повторите калибровку рядом со зданием' : 'Измерьте и запомните уровень земли';
+      }
       $('sourceNote').textContent = lastReading.kind === 'device'
         ? 'Показание высоты передано браузером. Его точность зависит от устройства и условий приёма.'
         : 'Высота поверхности взята из Copernicus DEM GLO-90 через Open-Meteo. Разрешение карты — около 90 м; высота здания определяется только введённой вами поправкой.';
+    }
+    function distanceMetres(a, b) {
+      const rad = Math.PI / 180;
+      const dLat = (a.latitude - b.latitude) * rad;
+      const dLon = (a.longitude - b.longitude) * rad;
+      const x = Math.sin(dLat / 2) ** 2 + Math.cos(a.latitude * rad) * Math.cos(b.latitude * rad) * Math.sin(dLon / 2) ** 2;
+      return 12742000 * Math.asin(Math.sqrt(x));
     }
     async function handlePosition(position) {
       const c = position.coords;
       $('coords').textContent = `${c.latitude.toFixed(5)}°, ${c.longitude.toFixed(5)}°`;
       $('accuracy').textContent = `±${fmt(c.accuracy)} м`;
       if (Number.isFinite(c.altitude)) {
-        lastReading = {height: c.altitude, kind: 'device'};
+        lastReading = {height: c.altitude, kind: 'device', latitude: c.latitude, longitude: c.longitude, altitudeAccuracy: c.altitudeAccuracy};
         $('status').textContent = c.altitudeAccuracy == null ? 'Точность высоты устройством не указана.' : `Точность высоты: ±${fmt(c.altitudeAccuracy)} м.`;
         render(); return;
       }
@@ -70,6 +93,13 @@
       );
     });
     $('offset').addEventListener('input', render);
+    $('calibrate').addEventListener('click', () => {
+      if (lastReading?.kind !== 'device') return;
+      ground = {height: lastReading.height, latitude: lastReading.latitude, longitude: lastReading.longitude, time: Date.now()};
+      try { localStorage.setItem('groundCalibration', JSON.stringify(ground)); } catch (_) {}
+      $('status').textContent = 'Уровень земли сохранён. Поднимитесь и нажмите «Определить высоту» ещё раз.';
+      render();
+    });
   </script>
 </body>
 </html>
