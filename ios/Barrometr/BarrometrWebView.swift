@@ -1,4 +1,5 @@
 import CoreMotion
+import CoreLocation
 import SwiftUI
 import WebKit
 
@@ -10,6 +11,7 @@ struct BarrometrWebView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let contentController = WKUserContentController()
         contentController.add(context.coordinator, name: "barrometrStore")
+        contentController.add(context.coordinator, name: "barrometrPose")
 
         let saved = UserDefaults.standard.string(forKey: "barrometr-site-state") ?? "{}"
         let encodedState = String(
@@ -46,15 +48,89 @@ struct BarrometrWebView: UIViewRepresentable {
 
     static func dismantleUIView(_ webView: WKWebView, coordinator: Coordinator) {
         coordinator.stopBarometer()
+        coordinator.stopPose()
         webView.configuration.userContentController.removeScriptMessageHandler(forName: "barrometrStore")
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: "barrometrPose")
         webView.navigationDelegate = nil
     }
 
-    final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+    final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler, CLLocationManagerDelegate {
         weak var webView: WKWebView?
         private let altimeter = CMAltimeter()
+        private let locationManager = CLLocationManager()
         private var readings: [Double] = []
         private var lastError: String?
+        private var latestLocation: CLLocation?
+        private var latestHeading: CLHeading?
+        private var wantsLocation = false
+        private var wantsHeading = false
+
+        func startPose(heading: Bool = false) {
+            wantsLocation = true
+            if heading { wantsHeading = true }
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            switch locationManager.authorizationStatus {
+            case .authorizedAlways, .authorizedWhenInUse:
+                if wantsLocation { locationManager.startUpdatingLocation() }
+                if wantsHeading && CLLocationManager.headingAvailable() { locationManager.startUpdatingHeading() }
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+            default:
+                sendPoseError("Доступ к геопозиции отключён в настройках iPhone.")
+            }
+        }
+
+        func stopPose() {
+            wantsLocation = false
+            wantsHeading = false
+            locationManager.stopUpdatingLocation()
+            locationManager.stopUpdatingHeading()
+        }
+
+        func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+            switch manager.authorizationStatus {
+            case .authorizedAlways, .authorizedWhenInUse:
+                if wantsLocation { manager.startUpdatingLocation() }
+                if wantsHeading && CLLocationManager.headingAvailable() { manager.startUpdatingHeading() }
+            case .denied, .restricted:
+                sendPoseError("Разрешите доступ к геопозиции в настройках iPhone.")
+            default: break
+            }
+        }
+
+        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            guard let value = locations.last, value.horizontalAccuracy >= 0 else { return }
+            latestLocation = value
+            sendPose()
+        }
+
+        func locationManager(_ manager: CLLocationManager, didUpdateHeading heading: CLHeading) {
+            latestHeading = heading
+            sendPose()
+        }
+
+        func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+            sendPoseError("Не удалось получить геопозицию: \(error.localizedDescription)")
+        }
+
+        private func sendPose() {
+            guard let webView, let value = latestLocation else { return }
+            let compass = latestHeading.flatMap { $0.trueHeading >= 0 ? $0.trueHeading : nil }
+            let headingValue = compass.map { String($0) } ?? "null"
+            let headingAccuracy = latestHeading.flatMap { $0.headingAccuracy >= 0 ? $0.headingAccuracy : nil }
+            let accuracyValue = headingAccuracy.map { String($0) } ?? "null"
+            let timestamp = Int(value.timestamp.timeIntervalSince1970 * 1000)
+            let script = "window.BarrometrNativeReceivePose?.(\(value.coordinate.latitude), \(value.coordinate.longitude), \(value.horizontalAccuracy), \(headingValue), \(accuracyValue), \(timestamp));"
+            webView.evaluateJavaScript(script, completionHandler: nil)
+        }
+
+        private func sendPoseError(_ message: String) {
+            guard let webView,
+                  let encoded = try? JSONEncoder().encode(message),
+                  let literal = String(data: encoded, encoding: .utf8) else { return }
+            webView.evaluateJavaScript("window.BarrometrNativePoseError?.(\(literal));", completionHandler: nil)
+        }
 
         func startBarometer() {
             guard CMAltimeter.isRelativeAltitudeAvailable() else {
@@ -105,11 +181,18 @@ struct BarrometrWebView: UIViewRepresentable {
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             sendPressure()
+            sendPose()
             if let lastError { sendError(lastError) }
         }
 
         func userContentController(_ userContentController: WKUserContentController,
                                    didReceive message: WKScriptMessage) {
+            if message.name == "barrometrPose", let command = message.body as? String {
+                if command == "start" { startPose() }
+                if command == "heading" { startPose(heading: true) }
+                if command == "stop" { stopPose() }
+                return
+            }
             guard message.name == "barrometrStore",
                   let state = message.body as? String,
                   state.utf8.count < 1_000_000 else { return }

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102c3a">
+  <title>Положение на плане · Баррометр</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f3f8f5;background:#102c3a}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#315d61,transparent 40%),#102c3a}.shell{max-width:1060px;margin:auto;padding:26px 18px 72px}a{color:#d6f48d}.top{display:flex;justify-content:space-between;align-items:center;gap:18px}.brand{font-weight:800;letter-spacing:.08em}.hero{padding:40px 0 20px}h1{font-size:clamp(34px,6vw,62px);line-height:1.05;letter-spacing:-.05em;margin:12px 0}.eyebrow{color:#b2e6cc;font-size:12px;font-weight:750;letter-spacing:.17em;text-transform:uppercase}p{line-height:1.55;color:#c4d7d3}.card{background:#f5f8f3;color:#143640;border-radius:24px;padding:25px;margin:18px 0;box-shadow:0 18px 50px #061b2740}.card p{color:#5b7379}.card h2{margin:0 0 10px;font-size:25px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.field{margin:13px 0}.field label{display:block;font-weight:700;font-size:14px;margin-bottom:7px}input{width:100%;border:1px solid #adc3bc;border-radius:10px;background:#fff;color:#143640;font:inherit;padding:11px}button{border:0;border-radius:11px;background:#d6f48d;color:#173936;font:inherit;font-weight:750;padding:12px 15px;cursor:pointer;min-height:45px}button.secondary{background:#e0ebe5}button:disabled{opacity:.5;cursor:not-allowed}input:focus,button:focus-visible,a:focus-visible{outline:3px solid #9dcb52;outline-offset:2px}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.small{font-size:13px}.status{font-size:14px;min-height:24px}.readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}.readout div{background:#e7f1ea;border-radius:12px;padding:14px;min-height:83px}.readout span{display:block;color:#597773;font-size:12px;text-transform:uppercase;letter-spacing:.06em}.readout strong{display:block;font-size:20px;margin-top:6px;font-variant-numeric:tabular-nums}.map-stage{position:relative;width:100%;margin-top:15px;background:#e7ece7;border:1px solid #bfd0c9;border-radius:14px;overflow:hidden;min-height:180px}.map-stage img{display:block;width:100%;height:auto}.map-stage svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.map-placeholder{display:grid;place-items:center;min-height:220px;padding:30px;text-align:center;color:#5b7379}.mode-active{background:#214b46;color:#fff}.anchor-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.outline-help{padding:12px 14px;border-left:3px solid #9dcb52;background:#e8f0e9;border-radius:4px}.result{font-size:18px;font-weight:750;color:#173936!important}.warning{background:#fff0c9;border-radius:12px;padding:12px 14px;color:#60470b!important}@media(max-width:700px){.grid,.anchor-fields,.readout{grid-template-columns:1fr}.card{padding:20px}.top{align-items:flex-start}.readout{gap:7px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top"><div class="brand">⌁ БАРРОМЕТР</div><a href="index.html">← К таблице давления</a></header>
+    <section class="hero"><div class="eyebrow">Пробный режим · GPS + компас + план</div><h1>Где я на плане?</h1><p>Адрес для проверки: ТРЦ «Косино Парк», Москва, Святоозёрская, 1А. Координаты центра здания нужны только для проверки близости; они не заменяют привязку плана.</p></section>
+    <section class="card">
+      <h2>1. Получить данные телефона</h2>
+      <p>Геолокация и ориентация обрабатываются на этом устройстве. Сайт не отправляет координаты на сервер.</p>
+      <div class="actions"><button id="startLocation" type="button">Включить GPS</button><button id="stopLocation" class="secondary" type="button" disabled>Остановить</button><button id="startHeading" class="secondary" type="button">Включить компас</button></div>
+      <div class="readout"><div><span>Координаты</span><strong id="coordinates">—</strong></div><div><span>Погрешность GPS</span><strong id="accuracy">—</strong></div><div><span>Направление телефона</span><strong id="heading">—</strong></div></div>
+      <p id="locationStatus" class="status" role="status" aria-live="polite">Данные телефона ещё не запрошены.</p>
+      <p id="vicinity" class="small"></p>
+    </section>
+    <section class="card">
+      <h2>2. Загрузить и привязать план</h2>
+      <p>Сохраните изображение схемы нужного этажа и загрузите его. У ТРЦ есть <a href="https://kosinopark.ru/schem/" target="_blank" rel="noopener noreferrer">официальная схема этажей</a>. Для привязки нужны две точки, которые можно узнать и на схеме, и на местности, желательно у входов и подальше друг от друга.</p>
+      <div class="field"><label for="planFile">Изображение плана (PNG, JPEG или WebP)</label><input id="planFile" type="file" accept="image/png,image/jpeg,image/webp"></div>
+      <div class="actions"><button id="modeA" class="secondary" type="button">Точка A на плане</button><button id="modeB" class="secondary" type="button">Точка B на плане</button><button id="modeOutline" class="secondary" type="button">Контур здания</button><button id="clearOutline" class="secondary" type="button">Очистить контур</button></div>
+      <p class="outline-help small" id="mapHelp">Загрузите план, выберите режим и коснитесь соответствующего места на изображении.</p>
+      <div class="map-stage" id="mapStage"><div class="map-placeholder" id="mapPlaceholder">План пока не загружен</div><img id="planImage" alt="Загруженный план этажа" hidden><svg id="mapOverlay" aria-hidden="true"></svg></div>
+      <div class="anchor-fields">
+        <div><h3>Точка A</h3><div class="field"><label for="latA">Широта</label><input id="latA" type="text" inputmode="decimal" placeholder="55,714653"></div><div class="field"><label for="lonA">Долгота</label><input id="lonA" type="text" inputmode="decimal" placeholder="37,883581"></div><button id="gpsA" class="secondary" type="button">Взять текущий GPS для A</button></div>
+        <div><h3>Точка B</h3><div class="field"><label for="latB">Широта</label><input id="latB" type="text" inputmode="decimal" placeholder="55,714653"></div><div class="field"><label for="lonB">Долгота</label><input id="lonB" type="text" inputmode="decimal" placeholder="37,883581"></div><button id="gpsB" class="secondary" type="button">Взять текущий GPS для B</button></div>
+      </div>
+      <p class="small">Для контура нажмите «Контур здания» и отметьте углы здания по порядку. Минимум три точки. Контур можно нарисовать по внешним стенам на плане; GPS не определит, с какой стороны стены вы стоите, если погрешность пересекает её.</p>
+      <p id="mapResult" class="result" role="status" aria-live="polite">Загрузите план и задайте две опорные точки.</p>
+      <p id="mapDetail" class="small"></p>
+    </section>
+    <section class="card"><h2>Как читать результат</h2><p>Синяя точка — оценка GPS; прозрачный круг — заявленная системой горизонтальная погрешность. Стрелка показывает направление <strong>телефона</strong>. Если круг пересекает границу здания, вывод «внутри» или «снаружи» остаётся неопределённым. Даже небольшой круг не гарантирует точную комнату внутри ТРЦ: стены и перекрытия искажают спутниковый сигнал.</p><p class="warning">Этот режим — проверка метода. Для навигации по отдельным магазинам или коридорам понадобятся дополнительные ориентиры внутри здания.</p></section>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    const format = (value, digits=1) => new Intl.NumberFormat('ru-RU',{maximumFractionDigits:digits}).format(value);
+    const parse = value => { const s=String(value).trim().replace(/\s/g,'').replace(',','.'); return s && /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(s) ? Number(s) : NaN; };
+    const center = {lat:55.714653,lon:37.883581};
+    let location = null, watchId = null, deviceHeading = null, planUrl = null, mode = null;
+    let width = 0, height = 0, a = null, b = null, outline = [];
+    const svgNS = 'http://www.w3.org/2000/svg';
+    function geoMeters(lat,lon,originLat,originLon) {
+      return {e:(lon-originLon)*111320*Math.cos(originLat*Math.PI/180), n:(lat-originLat)*111320};
+    }
+    function anchorGeo(which) {
+      const lat=parse($('lat'+which).value), lon=parse($('lon'+which).value);
+      return Number.isFinite(lat)&&Math.abs(lat)<=90&&Number.isFinite(lon)&&Math.abs(lon)<=180 ? {lat,lon} : null;
+    }
+    function transform() {
+      const ga=anchorGeo('A'), gb=anchorGeo('B');
+      if (!a||!b||!ga||!gb) return null;
+      const d=geoMeters(gb.lat,gb.lon,ga.lat,ga.lon), gx=d.e, gy=d.n, px=b.x-a.x, py=b.y-a.y;
+      const g2=gx*gx+gy*gy, p2=px*px+py*py;
+      if (g2<100||p2<100) return null;
+      return {ga,gx,gy,px,py,g2,metersPerPixel:Math.sqrt(g2/p2)};
+    }
+    function toPixel(lat,lon,t) {
+      const d=geoMeters(lat,lon,t.ga.lat,t.ga.lon);
+      const real=(d.e*t.gx+d.n*t.gy)/t.g2, imag=(d.n*t.gx-d.e*t.gy)/t.g2;
+      return {x:a.x+real*t.px-imag*t.py,y:a.y+real*t.py+imag*t.px};
+    }
+    function insidePolygon(point,poly) {
+      let inside=false;
+      for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+        const u=poly[i],v=poly[j];
+        if(((u.y>point.y)!==(v.y>point.y)) && point.x<(v.x-u.x)*(point.y-u.y)/(v.y-u.y)+u.x) inside=!inside;
+      }
+      return inside;
+    }
+    function edgeDistance(point,poly) {
+      let best=Infinity;
+      for(let i=0;i<poly.length;i++){
+        const u=poly[i],v=poly[(i+1)%poly.length],dx=v.x-u.x,dy=v.y-u.y;
+        const q=Math.max(0,Math.min(1,((point.x-u.x)*dx+(point.y-u.y)*dy)/(dx*dx+dy*dy||1)));
+        best=Math.min(best,Math.hypot(point.x-u.x-q*dx,point.y-u.y-q*dy));
+      }
+      return best;
+    }
+    function node(name,attrs) {
+      const el=document.createElementNS(svgNS,name);
+      for(const [key,value] of Object.entries(attrs)) el.setAttribute(key,String(value));
+      return el;
+    }
+    function update() {
+      const overlay=$('mapOverlay'); overlay.replaceChildren();
+      if(!width||!height) return;
+      overlay.setAttribute('viewBox',`0 0 ${width} ${height}`);
+      if(outline.length>1) overlay.append(node('polyline',{points:outline.map(p=>`${p.x},${p.y}`).join(' '),fill:outline.length>=3?'#9dd06730':'none',stroke:'#638f45','stroke-width':Math.max(2,width/350)}));
+      if(outline.length>=3) overlay.append(node('line',{x1:outline.at(-1).x,y1:outline.at(-1).y,x2:outline[0].x,y2:outline[0].y,stroke:'#638f45','stroke-width':Math.max(2,width/350)}));
+      for(const [point,label,color] of [[a,'A','#df6a42'],[b,'B','#755ac9']]) if(point){
+        overlay.append(node('circle',{cx:point.x,cy:point.y,r:Math.max(7,width/100),fill:color,stroke:'white','stroke-width':3}));
+        const text=node('text',{x:point.x+12,y:point.y-10,fill:color,'font-size':Math.max(18,width/35),'font-weight':800});text.textContent=label;overlay.append(text);
+      }
+      const t=transform();
+      if(!location){$('mapResult').textContent='Включите GPS, чтобы увидеть положение на плане.';$('mapDetail').textContent='';return;}
+      if(!t){$('mapResult').textContent='Укажите координаты и отметьте на плане две опорные точки не ближе 10 м друг от друга.';$('mapDetail').textContent='';return;}
+      const point=toPixel(location.lat,location.lon,t),radius=location.accuracy/t.metersPerPixel;
+      overlay.append(node('circle',{cx:point.x,cy:point.y,r:radius,fill:'#2679db22',stroke:'#2679db','stroke-width':Math.max(2,width/450)}));
+      if(deviceHeading!==null){
+        const radians=deviceHeading*Math.PI/180;
+        const target=toPixel(location.lat+10*Math.cos(radians)/111320,
+          location.lon+10*Math.sin(radians)/(111320*Math.cos(location.lat*Math.PI/180)),t);
+        const angle=Math.atan2(target.y-point.y,target.x-point.x),len=Math.max(24,width/13);
+        overlay.append(node('line',{x1:point.x,y1:point.y,x2:point.x+len*Math.cos(angle),y2:point.y+len*Math.sin(angle),stroke:'#1856a8','stroke-width':Math.max(4,width/180),'stroke-linecap':'round'}));
+      }
+      overlay.append(node('circle',{cx:point.x,cy:point.y,r:Math.max(7,width/120),fill:'#1264c6',stroke:'white','stroke-width':3}));
+      const detail=`GPS: ${format(location.accuracy)} м; масштаб плана: ${format(t.metersPerPixel,2)} м/пиксель.`;
+      if(outline.length<3){$('mapResult').textContent='Точка показана; нарисуйте контур здания для проверки «внутри/снаружи».';$('mapDetail').textContent=detail;return;}
+      const margin=edgeDistance(point,outline)*t.metersPerPixel,inside=insidePolygon(point,outline);
+      $('mapResult').textContent=margin<=location.accuracy ? 'У границы: GPS не позволяет уверенно сказать, внутри вы или снаружи.' : inside ? 'По GPS вы внутри отмеченного контура.' : 'По GPS вы снаружи отмеченного контура.';
+      $('mapDetail').textContent=`${detail} Расстояние от точки до границы ≈ ${format(margin)} м.`;
+    }
+    function setMode(next){mode=next;for(const id of ['modeA','modeB','modeOutline']) $(id).classList.toggle('mode-active',id===next);$('mapHelp').textContent=next==='modeA'?'Коснитесь точки A на плане.':next==='modeB'?'Коснитесь точки B на плане.':next==='modeOutline'?'Коснитесь углов внешнего контура по порядку.':'Выберите режим и коснитесь плана.';}
+    $('modeA').onclick=()=>setMode('modeA');$('modeB').onclick=()=>setMode('modeB');$('modeOutline').onclick=()=>setMode('modeOutline');
+    $('clearOutline').onclick=()=>{outline=[];update();};
+    $('planFile').addEventListener('change',event=>{
+      const file=event.target.files?.[0];
+      if(!file||!['image/png','image/jpeg','image/webp'].includes(file.type)){ $('mapHelp').textContent='Выберите PNG, JPEG или WebP.';return; }
+      if(planUrl) URL.revokeObjectURL(planUrl);
+      planUrl=URL.createObjectURL(file);a=null;b=null;outline=[];width=0;height=0;
+      $('planImage').src=planUrl;
+      $('planImage').onload=()=>{width=$('planImage').naturalWidth;height=$('planImage').naturalHeight;$('planImage').hidden=false;$('mapPlaceholder').hidden=true;setMode('modeA');update();};
+    });
+    $('mapStage').addEventListener('click',event=>{
+      if(!width||!height||!mode)return;
+      const rect=$('planImage').getBoundingClientRect();
+      if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)return;
+      const point={x:(event.clientX-rect.left)*width/rect.width,y:(event.clientY-rect.top)*height/rect.height};
+      if(mode==='modeA'){a=point;setMode('modeB');}else if(mode==='modeB'){b=point;setMode('modeOutline');}else outline.push(point);
+      update();
+    });
+    for(const id of ['latA','lonA','latB','lonB']) $(id).addEventListener('input',update);
+    for(const which of ['A','B']) $('gps'+which).addEventListener('click',()=>{
+      if(!location){$('locationStatus').textContent='Сначала включите GPS и дождитесь координат.';return;}
+      $('lat'+which).value=location.lat.toFixed(7);$('lon'+which).value=location.lon.toFixed(7);update();
+    });
+    function receiveLocation(latitude,longitude,accuracy,timestamp){
+      if(!Number.isFinite(latitude)||!Number.isFinite(longitude)||!Number.isFinite(accuracy)||accuracy<0)return;
+      location={lat:latitude,lon:longitude,accuracy,time:timestamp};
+      $('coordinates').textContent=`${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+      $('accuracy').textContent=`± ${format(accuracy)} м`;
+      $('locationStatus').textContent=`Обновлено: ${new Date(timestamp).toLocaleTimeString('ru-RU')}. Координаты обрабатываются на телефоне.`;
+      const d=geoMeters(latitude,longitude,center.lat,center.lon);
+      $('vicinity').textContent=`От центра ТРЦ «Косино Парк» примерно ${format(Math.hypot(d.e,d.n))} м. Это не доказывает нахождение внутри.`;
+      $('stopLocation').disabled=false;update();
+    }
+    window.BarrometrNativeReceivePose=(latitude,longitude,accuracy,heading,headingAccuracy,timestamp)=>{
+      receiveLocation(Number(latitude),Number(longitude),Number(accuracy),Number(timestamp));
+      if(Number.isFinite(heading)){
+        deviceHeading=(heading+360)%360;
+        $('heading').textContent=`${format(deviceHeading,0)}°${Number.isFinite(headingAccuracy)?` ± ${format(headingAccuracy,0)}°`:''}`;
+        update();
+      }
+    };
+    window.BarrometrNativePoseError=message=>{$('locationStatus').textContent=String(message);};
+    $('startLocation').addEventListener('click',()=>{
+      if(window.webkit?.messageHandlers?.barrometrPose){
+        $('locationStatus').textContent='Ожидаем геопозицию iPhone.';
+        window.webkit.messageHandlers.barrometrPose.postMessage('start');return;
+      }
+      if(!navigator.geolocation){$('locationStatus').textContent='Геолокация недоступна в этом браузере.';return;}
+      $('locationStatus').textContent='Ожидаем GPS. Разрешите доступ к геопозиции для этого сайта.';
+      watchId=navigator.geolocation.watchPosition(position=>{
+        const {latitude,longitude,accuracy}=position.coords;
+        receiveLocation(latitude,longitude,accuracy,position.timestamp);
+      },error=>{$('locationStatus').textContent=`GPS: ${error.message||'не удалось получить координаты'}.`;},{enableHighAccuracy:true,maximumAge:0,timeout:20000});
+    });
+    $('stopLocation').addEventListener('click',()=>{if(window.webkit?.messageHandlers?.barrometrPose)window.webkit.messageHandlers.barrometrPose.postMessage('stop');if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;$('stopLocation').disabled=true;$('locationStatus').textContent='Обновление GPS остановлено.';});
+    $('startHeading').addEventListener('click',async()=>{
+      if(window.webkit?.messageHandlers?.barrometrPose){window.webkit.messageHandlers.barrometrPose.postMessage('heading');$('heading').textContent='Ожидаем…';return;}
+      if(!('DeviceOrientationEvent' in window)){$('heading').textContent='Недоступен';return;}
+      try{
+        if(typeof DeviceOrientationEvent.requestPermission==='function' && await DeviceOrientationEvent.requestPermission()!=='granted'){$('heading').textContent='Нет доступа';return;}
+        window.addEventListener('deviceorientation',event=>{
+          const raw=Number.isFinite(event.webkitCompassHeading)?event.webkitCompassHeading:null;
+          if(raw===null){$('heading').textContent='Нет компаса';return;}
+          deviceHeading=(raw+360)%360;$('heading').textContent=`${format(deviceHeading,0)}°`;update();
+        });
+        $('heading').textContent='Ожидаем…';$('startHeading').disabled=true;
+      }catch(_){$('heading').textContent='Нет доступа';}
+    });
+  </script>
+</body>
+</html>
