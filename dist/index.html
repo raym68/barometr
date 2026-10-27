@@ -7,13 +7,14 @@
   <meta name="description" content="Высота и этаж по разнице давления относительно первого этажа.">
   <title>Высота по давлению</title>
   <style>
-    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f4f9f7;background:#102c3a}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 10%,#315d61 0,transparent 38%),linear-gradient(150deg,#102c3a,#14333d 58%,#0a2533)}.shell{max-width:1000px;margin:auto;padding:30px 24px 70px}.top{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:.04em}.mark{width:38px;height:38px;border:1px solid #a0d2bc;border-radius:12px;display:grid;place-items:center;color:#a5e1c1;font-size:22px}.pill{border:1px solid #618882;border-radius:999px;padding:8px 13px;color:#b7d1ce;font-size:12px}.hero{padding:70px 0 30px}.eyebrow{color:#b2e6cc;text-transform:uppercase;letter-spacing:.19em;font-size:12px;font-weight:700}h1{font-size:clamp(42px,8vw,78px);line-height:1.03;letter-spacing:-.06em;margin:16px 0 18px;max-width:850px}p{line-height:1.6;color:#bfd0d0}.intro{font-size:18px;max-width:720px}.grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(270px,.85fr);gap:18px;align-items:start}.card{background:#f5f8f3;color:#143640;border-radius:26px;padding:30px;box-shadow:0 20px 60px #061b2740}.card p{color:#5b7379}.side{background:#234550;color:#f4f9f7}.side p{color:#c1d3d0}.label{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#577879;font-weight:700}.side .label{color:#a8dcbf}.value{font-size:clamp(70px,12vw,122px);font-weight:750;line-height:1;letter-spacing:-.08em;margin:22px 0 8px;font-variant-numeric:tabular-nums}.unit{font-size:29px;letter-spacing:0;color:#577879;margin-left:8px}.result-sub{font-size:18px;font-weight:650}.details{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}.detail{border-top:1px solid #d2dfd9;padding-top:15px}.detail strong{display:block;font-size:22px;margin-top:5px;font-variant-numeric:tabular-nums}.field{margin-top:23px}label{display:block;font-size:14px;font-weight:650;margin-bottom:9px}input,select{width:100%;border-radius:12px;font:inherit;padding:13px;background:#fff;border:1px solid #adc3bc;color:#143640}input:focus,select:focus,button:focus-visible{outline:3px solid #b5df63;outline-offset:2px}.side input,.side select{background:#163540;border-color:#789895;color:white}.button{border:0;border-radius:14px;background:#d6f48d;color:#183838;font:inherit;font-weight:750;padding:15px 20px;cursor:pointer;min-height:52px}.button:hover{background:#e2ffa5}.button:disabled{opacity:.55;cursor:not-allowed}.button.secondary{background:#e4ece8}.side .button{width:100%;margin-top:11px}.small{font-size:13px}.muted{color:#5b7379}.warn{padding:13px 15px;border-radius:12px;background:#fff0c9;color:#58400b!important}.side .warn{background:#405356;color:#ffe6a1!important}.notice{margin-top:16px}.row{display:grid;grid-template-columns:1fr 115px;gap:10px}.readings{margin-top:24px;border-top:1px solid #d2dfd9;padding-top:22px}.readings h2{margin:0 0 8px;font-size:22px}.readings .button{margin-top:14px}.history{margin-top:18px}.history h2{margin:0 0 8px}.history ul,.saved-floors{list-style:none;margin:15px 0 0;padding:0}.history li,.saved-floors li{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:13px 0;border-top:1px solid #d2dfd9}.history time{display:block;color:#5b7379;font-size:13px}.history strong{font-variant-numeric:tabular-nums}.saved-floors li{border-color:#61827f;font-size:13px}.saved-floors button{background:none;color:#d6f48d;border:0;cursor:pointer;font:inherit}.note{border-top:1px solid #61827f;padding-top:20px;margin-top:22px;font-size:13px}footer{font-size:12px;color:#a8c1c0;margin-top:26px}@media(max-width:720px){.shell{padding:22px 16px 50px}.hero{padding:58px 0 25px}.grid{grid-template-columns:1fr}.card{padding:25px}.pill{display:none}.history li{align-items:flex-start;flex-direction:column}}
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f4f9f7;background:#102c3a}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 10%,#315d61 0,transparent 38%),linear-gradient(150deg,#102c3a,#14333d 58%,#0a2533)}.shell{max-width:1000px;margin:auto;padding:30px 24px 70px}.top{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:.04em}.mark{width:38px;height:38px;border:1px solid #a0d2bc;border-radius:12px;display:grid;place-items:center;color:#a5e1c1;font-size:22px}.pill{border:1px solid #618882;border-radius:999px;padding:8px 13px;color:#b7d1ce;font-size:12px}.hero{padding:70px 0 30px}.eyebrow{color:#b2e6cc;text-transform:uppercase;letter-spacing:.19em;font-size:12px;font-weight:700}h1{font-size:clamp(42px,8vw,78px);line-height:1.03;letter-spacing:-.06em;margin:16px 0 18px;max-width:850px}p{line-height:1.6;color:#bfd0d0}.intro{font-size:18px;max-width:720px}.grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(270px,.85fr);gap:18px;align-items:start}.card{background:#f5f8f3;color:#143640;border-radius:26px;padding:30px;box-shadow:0 20px 60px #061b2740}.card p{color:#5b7379}.side{background:#234550;color:#f4f9f7}.side p{color:#c1d3d0}.label{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#577879;font-weight:700}.side .label{color:#a8dcbf}.value{font-size:clamp(70px,12vw,122px);font-weight:750;line-height:1;letter-spacing:-.08em;margin:22px 0 8px;font-variant-numeric:tabular-nums}.unit{font-size:29px;letter-spacing:0;color:#577879;margin-left:8px}.result-sub{font-size:18px;font-weight:650}.details{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}.detail{border-top:1px solid #d2dfd9;padding-top:15px}.detail strong{display:block;font-size:22px;margin-top:5px;font-variant-numeric:tabular-nums}.field{margin-top:23px}label{display:block;font-size:14px;font-weight:650;margin-bottom:9px}input,select{width:100%;border-radius:12px;font:inherit;padding:13px;background:#fff;border:1px solid #adc3bc;color:#143640}input:focus,select:focus,button:focus-visible{outline:3px solid #b5df63;outline-offset:2px}.side input,.side select{background:#163540;border-color:#789895;color:white}.button{border:0;border-radius:14px;background:#d6f48d;color:#183838;font:inherit;font-weight:750;padding:15px 20px;cursor:pointer;min-height:52px}.button:hover{background:#e2ffa5}.button:disabled{opacity:.55;cursor:not-allowed}.button.secondary{background:#e4ece8}.side .button{width:100%;margin-top:11px}.small{font-size:13px}.muted{color:#5b7379}.warn{padding:13px 15px;border-radius:12px;background:#fff0c9;color:#58400b!important}.side .warn{background:#405356;color:#ffe6a1!important}.notice{margin-top:16px}.row{display:grid;grid-template-columns:1fr 115px;gap:10px}.readings{margin-top:24px;border-top:1px solid #d2dfd9;padding-top:22px}.readings h2{margin:0 0 8px;font-size:22px}.readings .button{margin-top:14px}.history{margin-top:18px}.history h2{margin:0 0 8px}.history ul,.saved-floors{list-style:none;margin:15px 0 0;padding:0}.history li,.saved-floors li{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:13px 0;border-top:1px solid #d2dfd9}.history time{display:block;color:#5b7379;font-size:13px}.history strong{font-variant-numeric:tabular-nums}.saved-floors li{border-color:#61827f;font-size:13px}.saved-floors button{background:none;color:#d6f48d;border:0;cursor:pointer;font:inherit}.note{border-top:1px solid #61827f;padding-top:20px;margin-top:22px;font-size:13px}footer{font-size:12px;color:#a8c1c0;margin-top:26px}.manual{margin-bottom:18px;background:#e7f2da}.manual h2{margin:8px 0 6px}.manual-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}.manual .field{margin-top:12px}.manual .button{white-space:nowrap}.manual p{margin:8px 0}.calibration{background:#eaf0ed;border-radius:18px;padding:18px;margin-top:24px}.calibration h2{margin:0 0 8px;font-size:22px}.calibration .row{grid-template-columns:1fr 1fr}.calibration .button{margin-top:12px}.hint{border-left:3px solid #9dc873;padding-left:12px}@media(max-width:720px){.shell{padding:22px 16px 50px}.hero{padding:58px 0 25px}.grid{grid-template-columns:1fr}.card{padding:25px}.pill{display:none}.history li{align-items:flex-start;flex-direction:column}.manual-grid{grid-template-columns:1fr}.calibration .row{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <main class="shell">
     <header class="top"><div class="brand"><span class="mark">⌁</span><span>БАРРОМЕТР</span></div><span class="pill">Высота по давлению</span></header>
-    <section class="hero"><div class="eyebrow">От первого этажа</div><h1>На какой вы высоте?</h1><p class="intro">Сохраните давление на первом этаже, затем введите давление там, где вы находитесь. Сайт покажет разницу высоты и примерный этаж. Один этаж по умолчанию — 3,3 м.</p></section>
+    <section class="hero"><div class="eyebrow">От первого этажа</div><h1>На какой вы высоте?</h1><p class="intro">Один раз сохраните давление первого этажа. Потом для нового дня достаточно обновить ноль на любом известном этаже и измерить давление там, где вы находитесь.</p></section>
+    <section class="card manual" aria-label="Домашний тест вручную"><div class="label">Домашний тест · без барометра</div><h2>Задайте высоту вручную</h2><p>Можно проверить определение этажа, пока вы дома. Это не меняет сохранённые показания давления.</p><div class="field" style="max-width:300px"><label for="corpusSelect">Здание или корпус</label><select id="corpusSelect"></select></div><div class="manual-grid"><div class="field"><label for="floorStep">Высота одного этажа, м</label><input id="floorStep" type="text" inputmode="decimal" value="3,3"></div><div class="field"><label for="manualHeight">Моя высота над 1-м этажом, м</label><input id="manualHeight" type="text" inputmode="decimal" placeholder="Например, 8,1"></div><button class="button" id="showManual">Показать этаж</button></div><p class="small" id="manualExample">Профили: университет — 3,3 м, дом — 2,7 м между этажами.</p></section>
     <section class="grid" aria-label="Измерение высоты">
       <div class="card">
         <div class="label">Высота относительно первого этажа</div>
@@ -26,32 +27,41 @@
         <p id="resultNote">Сначала сохраните давление первого этажа выбранного корпуса.</p>
         <div class="readings">
           <h2>1. Первый этаж</h2>
-          <p class="small">Введите фактическое давление с барометра у входа или на первом этаже. Например, 1002,4 гПа. Это нулевая отметка высоты.</p>
+          <p class="small">Введите фактическое давление с барометра у входа или на первом этаже. Можно ввести 3–5 показаний через «;» — сайт усреднит их. Например: 1002,4; 1002,5; 1002,4.</p>
           <div class="row"><div><label for="baselinePressure">Давление первого этажа</label><input id="baselinePressure" type="text" inputmode="decimal" placeholder="Например, 1002,4" autocomplete="off"></div><div><label for="pressureUnit">Единицы</label><select id="pressureUnit"><option value="hpa">гПа</option><option value="kpa">кПа</option></select></div></div>
           <button class="button" id="saveBaseline">Сохранить первый этаж</button>
           <p class="small" id="baselineStatus">Опорный замер ещё не сохранён.</p>
         </div>
         <div class="readings">
           <h2>2. Текущий этаж</h2>
-          <p class="small">Снимите второе показание тем же устройством. При необходимости выберите единицы выше. Лучше измерять вскоре после первого замера.</p>
+          <p class="small">Снимите второе показание тем же устройством. Можно ввести несколько показаний через «;». Лучше измерять вскоре после первого замера.</p>
           <label for="currentPressure">Текущее давление, <span class="unitLabel">гПа</span></label>
           <input id="currentPressure" type="text" inputmode="decimal" placeholder="Например, 1001,2" autocomplete="off">
           <button class="button" id="calculate">Рассчитать высоту и этаж</button>
           <button class="button secondary" id="saveReading" disabled>Сохранить результат в историю</button>
+        </div>
+        <div class="calibration">
+          <h2>Обновить ноль без похода вниз</h2>
+          <p class="small">Находитесь на известном этаже? Укажите его номер и давление сейчас. Сайт сам пересчитает давление первого этажа по сохранённой высоте этого этажа или шагу корпуса. Остальные этажи перемерять не надо.</p>
+          <div class="row"><div><label for="knownFloor">Сейчас я на этаже</label><input id="knownFloor" type="number" inputmode="numeric" min="1" max="300" step="1" placeholder="Например, 4"></div><div><label for="knownPressure">Давление, <span class="unitLabel">гПа</span></label><input id="knownPressure" type="text" inputmode="decimal" placeholder="Например, 1001,2"></div></div>
+          <button class="button secondary" id="recalibrate">Обновить ноль по этому этажу</button>
+          <p class="small hint" id="calibrationHint">Для первого этажа достаточно сохранения замера выше. Здесь можно выбрать любой этаж.</p>
         </div>
         <p class="small notice" id="status" role="status" aria-live="polite"></p>
       </div>
       <aside class="card side">
         <div class="label">Настройки здания</div>
         <h2>Свой ноль для каждого корпуса</h2>
-        <div class="field"><label for="corpusSelect">Корпус</label><select id="corpusSelect"></select><label for="corpusName" style="margin-top:14px">Добавить корпус</label><input id="corpusName" type="text" maxlength="40" placeholder="Название корпуса"><button class="button" id="addCorpus">Добавить</button></div>
-        <div class="field"><label for="floorStep">Расстояние между этажами, м</label><input id="floorStep" type="text" inputmode="decimal" value="3,3"><p class="small">По умолчанию 3,3 м между полами. Для другого корпуса задайте его шаг отдельно.</p></div>
+        <div class="field"><label for="corpusName">Добавить корпус</label><input id="corpusName" type="text" maxlength="40" placeholder="Название корпуса"><button class="button" id="addCorpus">Добавить</button></div>
+        <p class="small">Высота одного этажа настраивается в зелёной плашке выше. У каждого корпуса своё значение.</p>
         <div class="field"><label for="temperature">Температура воздуха, °C</label><input id="temperature" type="text" inputmode="decimal" value="20"><p class="small">Нужна для перевода разницы давления в метры. Если не знаете, оставьте 20 °C.</p></div>
         <div class="field"><label for="floorNumber">Высота конкретного этажа</label><input id="floorNumber" type="number" inputmode="numeric" min="1" max="300" step="1" placeholder="Номер этажа"><input id="floorHeight" type="text" inputmode="decimal" placeholder="Высота от первого этажа, м" style="margin-top:9px"><button class="button" id="saveFloor">Сохранить этаж</button><p class="small">Метров можно не вводить, если на этом этаже уже рассчитана высота по давлению.</p><ul class="saved-floors" id="floorList"></ul></div>
         <p class="note">Сайт не может автоматически считать давление с барометра iPhone. Введите реальные показания из приложения, которое их отображает. Числа высоты GPS в метрах для этого расчёта не подходят.</p>
-        <p class="small warn" id="weatherNote">Погода меняет давление. Сохранённый ноль остаётся доступным в будущие дни, но для точной оценки заново измеряйте первый этаж.</p>
+        <p class="small warn" id="weatherNote">Погода меняет давление. На следующий день обновите ноль на любом известном этаже.</p>
+        <p class="small" id="accuracyGuide">Снимайте несколько показаний в одной точке, держите телефон одинаково, избегайте потока воздуха из вентиляции и используйте один датчик.</p>
       </aside>
     </section>
+    <section class="card history" aria-label="Точность и актуальность"><h2>Когда обновлять калибровку?</h2><p>У нуля нет фиксированного срока годности. Сдвиг давления на 0,2 гПа даёт ошибку высоты около 1,7 м. Отметка «30 минут» — напоминание проверить замер, а не обещание точности на это время.</p><p>Для новой серии измерений снимите давление на любом этаже, номер которого знаете, и нажмите «Обновить ноль по этому этажу». Сайт применит свежий ноль ко всем сохранённым высотам. После этого для других этажей нужен только их текущий замер.</p><p>GPS с точностью местоположения 1–3 м помогает понять, что вы в том же корпусе, но не исправляет погрешность высоты по GPS. Для непрерывного автоматического обновления понадобятся доступ к барометру через приложение iPhone и опорный датчик в здании либо подтверждение известного этажа.</p></section>
     <section class="card history" aria-label="История замеров"><h2>История замеров</h2><p>Опорные замеры и результаты сохраняются в браузере на этом устройстве.</p><ul id="historyList"></ul><p id="historyEmpty" class="small">Пока нет сохранённых результатов.</p></section>
     <footer>Расчёт показывает высоту относительно первого этажа, а не над уровнем моря. Показания и история хранятся только в этом браузере; очистка данных сайта удалит их.</footer>
   </main>
@@ -72,15 +82,47 @@
       floors:p.floors && typeof p.floors === 'object' ? p.floors : {},
       baseline:p.baseline && validPressure(p.baseline.pressure) && Number.isFinite(p.baseline.time) ? p.baseline : null
     })) : [];
-    if (!profiles.length) profiles = [{id:'main',name:'Основной корпус',step:3.3,floors:{},baseline:null}];
+    if (!profiles.length) profiles = [
+      {id:'university',name:'Университет',step:3.3,floors:{},baseline:null},
+      {id:'home',name:'Дом',step:2.7,floors:{},baseline:null}
+    ];
+    else {
+      if (!profiles.some(p => p.name.toLocaleLowerCase('ru-RU') === 'университет'))
+        profiles.push({id:'university',name:'Университет',step:3.3,floors:{},baseline:null});
+      if (!profiles.some(p => p.name.toLocaleLowerCase('ru-RU') === 'дом'))
+        profiles.push({id:'home',name:'Дом',step:2.7,floors:{},baseline:null});
+    }
     let selectedProfileId = profiles.some(p => p.id === saved.selectedProfileId) ? saved.selectedProfileId : profiles[0].id;
     let history = Array.isArray(saved.history) ? saved.history.filter(x => x && Number.isFinite(x.height) && Number.isFinite(x.time)).slice(0,100) : [];
     let result = null;
     const profile = () => profiles.find(p => p.id === selectedProfileId);
     const unit = () => $('pressureUnit').value;
     const toHpa = value => unit() === 'kpa' ? value * 10 : value;
-    const pressureInput = id => toHpa(number($(id).value));
+    const pressureSamples = id => {
+      const text = $(id).value.trim();
+      if (!text) return [];
+      return text.split(';').map(part => toHpa(number(part)));
+    };
+    const pressureInput = id => {
+      const samples = pressureSamples(id);
+      return samples.length && samples.every(validPressure)
+        ? samples.reduce((sum,p) => sum + p, 0) / samples.length : NaN;
+    };
+    const pressureSpread = id => {
+      const samples = pressureSamples(id);
+      return samples.length && samples.every(validPressure) ? Math.max(...samples)-Math.min(...samples) : NaN;
+    };
     const setStatus = message => { $('status').textContent = message; };
+    const scaleHeight = temp => 287.05 * (temp + 273.15) / 9.80665;
+    const floorHeight = floor => {
+      const exact = Number(profile().floors[floor]);
+      return Object.prototype.hasOwnProperty.call(profile().floors, floor) && Number.isFinite(exact)
+        ? exact : (floor - 1) * profile().step;
+    };
+    const ageText = time => {
+      const minutes = Math.max(0, Math.floor((Date.now() - time) / 60000));
+      return minutes < 60 ? `${minutes} мин` : `${fmt(minutes / 60)} ч`;
+    };
     function persist() {
       try { localStorage.setItem(storageKey, JSON.stringify({profiles,selectedProfileId,history})); return true; }
       catch (_) { setStatus('Браузер не разрешил сохранение. Проверьте настройки хранения данных сайта.'); return false; }
@@ -100,14 +142,22 @@
     function render() {
       const p = profile(), baseline = p.baseline, old = baseline && Date.now()-baseline.time > 30*60*1000;
       $('baselineValue').textContent = baseline ? `${fmt(baseline.pressure,2)} гПа` : '—';
-      $('baselineStatus').textContent = baseline ? `Сохранено для «${p.name}» ${dateTime(baseline.time)}.${old ? ' Обновите замер у входа: давление могло измениться.' : ''}` : 'Опорный замер ещё не сохранён.';
-      $('weatherNote').textContent = old ? 'Опорному замеру больше 30 минут. Погода и вентиляция могли изменить давление. Повторите первый замер для точного этажа.' : 'Давление меняется с погодой. Для будущих дней ноль сохранён, но перед новым подъёмом обновите его на первом этаже.';
+      $('baselineStatus').textContent = baseline ? `Ноль для «${p.name}» обновлён ${dateTime(baseline.time)} (${ageText(baseline.time)} назад)${baseline.sourceFloor > 1 ? ` по ${baseline.sourceFloor}-му этажу` : ' на 1-м этаже'}.` : 'Опорный замер ещё не сохранён.';
+      $('weatherNote').textContent = old ? `После калибровки прошло ${ageText(baseline.time)}. Это напоминание, а не гарантия точности: погодный сдвиг может появиться и раньше. Обновите ноль на любом известном этаже.` : 'У нуля нет гарантированного срока точности. На следующий день и при смене погоды обновите его на любом известном этаже.';
       $('height').textContent = result ? fmt(result.height) : '—';
-      $('pressureDifference').textContent = result ? `${fmt(result.deltaPressure,2)} гПа` : '—';
+      $('pressureDifference').textContent = result && result.source !== 'manual' ? `${fmt(result.deltaPressure,2)} гПа` : '—';
       const floor = result ? estimatedFloor(result.height) : null;
       $('floor').textContent = floor ? floor.label : 'Этаж —';
-      $('resultNote').textContent = result ? `${floor.note}. ${result.height >= 0 ? 'Выше' : 'Ниже'} первого этажа на ${fmt(Math.abs(result.height))} м.${result.oldBaseline ? ' Опорный замер старый: результат ненадёжен.' : ''}` : baseline ? 'Опорный замер сохранён. Введите давление текущего этажа и рассчитайте высоту.' : 'Сначала сохраните давление первого этажа выбранного корпуса.';
+      $('resultNote').textContent = result ? `${result.source === 'manual' ? 'Ручной тест. ' : ''}${floor.note}. ${result.height >= 0 ? 'Выше' : 'Ниже'} первого этажа на ${fmt(Math.abs(result.height))} м.${result.source !== 'manual' && (result.oldBaseline || old) ? ' Ноль может устареть: обновите его на известном этаже.' : ''}${result.noisy ? ' Показания заметно колебались: повторите замер вдали от потока воздуха.' : ''}` : baseline ? 'Опорный замер сохранён. Введите давление текущего этажа и рассчитайте высоту.' : 'Сначала сохраните давление первого этажа выбранного корпуса.';
       $('saveReading').disabled = !result;
+      $('manualExample').textContent = `Корпус «${p.name}»: 1-й этаж — 0 м, 4-й этаж — около ${fmt(3*p.step)} м при шаге ${fmt(p.step)} м.`;
+      const temp = number($('temperature').value);
+      const pressurePerFloor = (baseline?.pressure || 1000) * (1 - Math.exp(-p.step / scaleHeight(Number.isFinite(temp) && temp >= -40 && temp <= 60 ? temp : 20)));
+      $('accuracyGuide').textContent = `Шаг ${fmt(p.step)} м — около ${fmt(pressurePerFloor,2)} гПа на этаж. Снимайте несколько показаний в одной точке, используйте один датчик и избегайте потока воздуха из вентиляции.`;
+      const knownFloor = Number($('knownFloor').value);
+      $('calibrationHint').textContent = Number.isInteger(knownFloor) && knownFloor >= 1 && knownFloor <= 300
+        ? `Высота ${knownFloor}-го этажа для калибровки: ${fmt(floorHeight(knownFloor))} м ${Object.prototype.hasOwnProperty.call(p.floors, knownFloor) ? '(сохранённая отметка)' : '(по шагу корпуса)'}.`
+        : 'Для первого этажа достаточно сохранения замера выше. Здесь можно выбрать любой этаж.';
     }
     function renderFloorList() {
       const list = $('floorList'); list.replaceChildren();
@@ -133,19 +183,21 @@
         const li=document.createElement('li'), left=document.createElement('span'), time=document.createElement('time'), value=document.createElement('strong');
         time.dateTime=new Date(x.time).toISOString(); time.textContent=dateTime(x.time);
         left.textContent=x.corpus || 'Корпус'; left.append(time);
-        value.textContent=`${fmt(x.height)} м · ${x.floor} · ${fmt(x.currentPressure,2)} гПа`;
+        value.textContent=x.source === 'manual' ? `${fmt(x.height)} м · ${x.floor} · вручную`
+          : `${fmt(x.height)} м · ${x.floor} · ${fmt(x.currentPressure,2)} гПа`;
         li.append(left,value); list.append(li);
       }
     }
     $('pressureUnit').addEventListener('change', () => {
       $('baselinePressure').placeholder = unit()==='kpa' ? 'Например, 100,24' : 'Например, 1002,4';
       $('currentPressure').placeholder = unit()==='kpa' ? 'Например, 100,12' : 'Например, 1001,2';
-      document.querySelector('.unitLabel').textContent = unit()==='kpa' ? 'кПа' : 'гПа';
+      $('knownPressure').placeholder = unit()==='kpa' ? 'Например, 100,12' : 'Например, 1001,2';
+      document.querySelectorAll('.unitLabel').forEach(x => { x.textContent = unit()==='kpa' ? 'кПа' : 'гПа'; });
     });
     $('saveBaseline').addEventListener('click', () => {
       const pressure=pressureInput('baselinePressure');
       if (!validPressure(pressure)) { setStatus('Введите фактическое давление от 300 до 1100 гПа (или 30–110 кПа).'); return; }
-      profile().baseline={pressure,time:Date.now()};
+      profile().baseline={pressure,time:Date.now(),sourceFloor:1,spread:pressureSpread('baselinePressure')};
       result=null;
       if (persist()) setStatus('Давление первого этажа сохранено. Теперь снимите показание на нужном этаже.');
       render();
@@ -155,8 +207,9 @@
       if (!baseline) { setStatus('Сначала сохраните давление первого этажа этого корпуса.'); return; }
       if (!validPressure(current)) { setStatus('Введите текущее давление от 300 до 1100 гПа (или 30–110 кПа).'); return; }
       if (!Number.isFinite(temp) || temp < -40 || temp > 60) { setStatus('Укажите температуру от −40 до +60 °C.'); return; }
-      const height=(287.05*(temp+273.15)/9.80665)*Math.log(baseline.pressure/current);
-      result={height,deltaPressure:baseline.pressure-current,baselinePressure:baseline.pressure,currentPressure:current,
+      const height=scaleHeight(temp)*Math.log(baseline.pressure/current);
+      result={height,source:'pressure',deltaPressure:baseline.pressure-current,baselinePressure:baseline.pressure,currentPressure:current,
+        noisy:(baseline.spread || 0)>0.2 || pressureSpread('currentPressure')>0.2,
         oldBaseline:Date.now()-baseline.time>30*60*1000,corpus:profile().name,time:Date.now()};
       setStatus('Расчёт выполнен. При подъёме давление обычно уменьшается.');
       render();
@@ -168,8 +221,28 @@
       if (persist()) setStatus('Результат сохранён в истории этого браузера.');
       renderHistory();
     });
+    $('recalibrate').addEventListener('click', () => {
+      const floor=Number($('knownFloor').value), pressure=pressureInput('knownPressure'), temp=number($('temperature').value);
+      if (!Number.isInteger(floor) || floor<1 || floor>300) { setStatus('Укажите известный номер этажа от 1 до 300.'); return; }
+      if (!validPressure(pressure)) { setStatus('Введите текущее фактическое давление на известном этаже.'); return; }
+      if (!Number.isFinite(temp) || temp<-40 || temp>60) { setStatus('Укажите температуру от −40 до +60 °C.'); return; }
+      const inferred=pressure*Math.exp(floorHeight(floor)/scaleHeight(temp));
+      if (!validPressure(inferred)) { setStatus('Расчётное давление первого этажа вышло за допустимые пределы. Проверьте ввод.'); return; }
+      profile().baseline={pressure:inferred,time:Date.now(),sourceFloor:floor,sourcePressure:pressure,spread:pressureSpread('knownPressure')};
+      result=null;
+      if (persist()) setStatus(`Ноль обновлён по ${floor}-му этажу. Остальные сохранённые высоты можно использовать без повторного обхода.`);
+      render();
+    });
+    $('knownFloor').addEventListener('input', render);
+    $('showManual').addEventListener('click', () => {
+      const height=number($('manualHeight').value);
+      if (!Number.isFinite(height) || height < -100 || height > 1000) { setStatus('Введите высоту над первым этажом от −100 до 1000 м.'); return; }
+      result={height,source:'manual',corpus:profile().name,time:Date.now()};
+      setStatus('Показан ручной тест. Опорное давление не менялось.');
+      render();
+    });
     $('corpusSelect').addEventListener('change', () => {
-      selectedProfileId=$('corpusSelect').value; result=null; $('baselinePressure').value=''; $('currentPressure').value='';
+      selectedProfileId=$('corpusSelect').value; result=null; $('baselinePressure').value=''; $('currentPressure').value=''; $('knownFloor').value=''; $('knownPressure').value=''; $('manualHeight').value='';
       persist(); renderProfiles(); setStatus('Корпус выбран. Для него используется собственный опорный замер.');
     });
     $('addCorpus').addEventListener('click', () => {
@@ -178,7 +251,7 @@
       if (profiles.some(p => p.name.toLocaleLowerCase('ru-RU')===name.toLocaleLowerCase('ru-RU'))) { setStatus('Корпус с таким названием уже есть.'); return; }
       const id=`corpus-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
       profiles.push({id,name,step:3.3,floors:{},baseline:null}); selectedProfileId=id; result=null;
-      $('corpusName').value=''; $('baselinePressure').value=''; $('currentPressure').value='';
+      $('corpusName').value=''; $('baselinePressure').value=''; $('currentPressure').value=''; $('knownFloor').value=''; $('knownPressure').value=''; $('manualHeight').value='';
       persist(); renderProfiles(); setStatus(`Корпус «${name}» добавлен. Измерьте давление на его первом этаже.`);
     });
     $('floorStep').addEventListener('change', () => {
@@ -197,6 +270,7 @@
       setStatus(`Высота ${floor}-го этажа сохранена для «${profile().name}».`);
     });
     renderProfiles(); renderHistory();
+    setInterval(render, 60000);
   </script>
 </body>
 </html>
