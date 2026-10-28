@@ -1,4 +1,4 @@
-"""Small same-origin HTTP server for the local frontend and API."""
+"""Локальный HTTP-сервер для интерфейса и API на одном адресе."""
 
 from __future__ import annotations
 

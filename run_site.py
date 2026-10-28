@@ -1,4 +1,4 @@
-"""Run the local frontend and Python API."""
+"""Запуск локального интерфейса и Python API."""
 
 import argparse
 

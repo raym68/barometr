@@ -145,7 +145,7 @@ struct BarrometrWebView: UIViewRepresentable {
                     return
                 }
                 guard let data else { return }
-                // Apple reports CMAltitudeData.pressure in kPa; the site uses hPa.
+                // Apple передаёт CMAltitudeData.pressure в кПа, а сайт использует гПа.
                 let pressureHpa = data.pressure.doubleValue * 10
                 guard pressureHpa.isFinite, (300...1100).contains(pressureHpa) else { return }
                 self.lastError = nil

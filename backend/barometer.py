@@ -1,4 +1,4 @@
-"""Estimate altitude from a barometer and a nearby outdoor reference."""
+"""Оценка высоты по барометру и ближайшему наружному опорному замеру."""
 
 
 def altitude_from_pressure(
@@ -6,15 +6,15 @@ def altitude_from_pressure(
     outdoor_pressure_hpa: float,
     outdoor_altitude_m: float = 0.0,
 ) -> float:
-    """Return altitude in metres relative to sea level.
+    """Вернуть высоту над уровнем моря в метрах.
 
-    Pressures must be measured in hPa at roughly the same time. The outdoor
-    value must be *station pressure* measured at ``outdoor_altitude_m``, not
-    weather-report pressure adjusted to sea level. For nearby locations this
-    uses the standard-atmosphere barometric approximation. Weather and indoor
-    ventilation can affect accuracy.
+    Давление в помещении и снаружи измеряйте в гПа примерно в одно время.
+    Наружный замер должен быть фактическим давлением на высоте
+    ``outdoor_altitude_m``, а не приведённым к уровню моря давлением из прогноза.
+    Используется приближение стандартной атмосферы для близких точек.
+    Погода и вентиляция помещения могут влиять на точность.
 
-    Example: ``altitude_from_pressure(1001.0, 1013.25, 0.0)``.
+    Пример: ``altitude_from_pressure(1001.0, 1013.25, 0.0)``.
     """
     for name, pressure in (
         ("indoor_pressure_hpa", indoor_pressure_hpa),

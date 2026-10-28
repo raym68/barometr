@@ -1,1 +1,1 @@
-"""Backend for the local barometer site."""
+"""Серверная часть локального сайта «Барометр»."""

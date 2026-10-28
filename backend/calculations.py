@@ -1,4 +1,4 @@
-"""Pressure calculations shared by the local HTTP API."""
+"""Расчёты давления для локального HTTP API."""
 
 from __future__ import annotations
 
