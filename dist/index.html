@@ -28,7 +28,7 @@ const fmt=(n,d=1)=>new Intl.NumberFormat('ru-RU',{maximumFractionDigits:d}).form
 const pressureFmt=n=>new Intl.NumberFormat('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
 const number=v=>{const s=String(v).trim().replace(/\s/g,'').replace(',','.');return s&&/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(s)?Number(s):NaN};
 const validPressure=v=>Number.isFinite(v)&&v>=300&&v<=1100;
-const valid=c=>Number.isFinite(c.step)&&c.step>=1&&c.step<=20&&Number.isInteger(c.referenceFloor)&&Number.isInteger(c.count)&&c.count>=1&&c.count<=300&&c.referenceFloor>=1&&c.referenceFloor<=c.count&&validPressure(c.referencePressure);
+const valid=c=>!!c&&typeof c==="object"&&Number.isFinite(c.step)&&c.step>=1&&c.step<=20&&Number.isInteger(c.referenceFloor)&&Number.isInteger(c.count)&&c.count>=1&&c.count<=300&&c.referenceFloor>=1&&c.referenceFloor<=c.count&&validPressure(c.referencePressure);
 let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(_){}
 if(window.BarrometrNativeInitialState&&typeof window.BarrometrNativeInitialState==='object')saved=window.BarrometrNativeInitialState;
 let config=valid(saved.tableConfig)?saved.tableConfig:{step:4.2,referenceFloor:2,referencePressure:1014.2,count:9};
