@@ -98,3 +98,19 @@ def compare_pressure(data: dict) -> dict:
     measured = _pressure(data.get("measuredPressure"), "Измеренное давление")
     delta = round(measured - expected, 2)
     return {"difference": delta, "direction": "above" if delta > 0 else "below" if delta < 0 else "equal"}
+
+
+def locate_floor(data: dict) -> dict:
+    """Определить ближайший этаж по давлению и текущей опорной точке."""
+    step = _number(data.get("step"), "Высота между этажами")
+    if not 1 <= step <= 20:
+        raise ValueError("Высота между этажами: допустимо от 1 до 20 м.")
+    count = _integer(data.get("count"), "Этажей в здании")
+    reference_floor = _integer(data.get("referenceFloor"), "Опорный этаж")
+    if reference_floor > count:
+        raise ValueError("Опорный этаж должен находиться в здании.")
+    reference_pressure = _pressure(data.get("referencePressure"), "Опорное давление")
+    measured = _pressure(data.get("measuredPressure"), "Измеренное давление")
+    estimated = reference_floor + SCALE_HEIGHT * math.log(reference_pressure / measured) / step
+    nearest = max(1, min(count, math.floor(estimated + 0.5)))
+    return {"floor": nearest, "estimatedFloor": estimated, "withinBuilding": 0.5 <= estimated <= count + 0.5}

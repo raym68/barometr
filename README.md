@@ -47,6 +47,7 @@ python3 run_site.py --port 8001
 
 - `POST /api/table` — `{ "step": 4.2, "referenceFloor": 2, "referencePressure": 1014.2, "count": 9 }`; возвращает таблицу этажей.
 - `POST /api/height` — `{ "measurements": [{ "floor": 2, "pressure": 1014.2 }, { "floor": 3, "pressure": 1013.7 }] }`; возвращает высоту по замерам.
+- `POST /api/locate` — `{ "step": 4.2, "referenceFloor": 2, "referencePressure": 1014.2, "count": 9, "measuredPressure": 1013.2 }`; возвращает предполагаемый этаж.
 - `POST /api/compare` — `{ "expectedPressure": 1013.7, "measuredPressure": 1013.8 }`; возвращает разницу давлений.
 - `GET /api/health` — проверка работы сервера.
 

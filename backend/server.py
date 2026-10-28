@@ -8,13 +8,14 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from .calculations import compare_pressure, height_from_measurements, pressure_table
+from .calculations import compare_pressure, height_from_measurements, locate_floor, pressure_table
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 ROUTES = {
     "/api/table": pressure_table,
     "/api/height": height_from_measurements,
     "/api/compare": compare_pressure,
+    "/api/locate": locate_floor,
 }
 
 

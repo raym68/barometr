@@ -5,7 +5,7 @@
 <title>Давление по этажам</title>
 <style>
 :root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#143640;background:#102c3a}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 10%,#315d61 0,transparent 38%),linear-gradient(150deg,#102c3a,#14333d 58%,#0a2533)}main{max-width:1000px;margin:auto;padding:28px 24px 48px}.card{background:#f5f8f3;border-radius:26px;padding:30px;box-shadow:0 20px 60px #061b2740}.label{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#577879;font-weight:700}h1{font-size:clamp(27px,4vw,38px);letter-spacing:-.035em;margin:8px 0}p{line-height:1.55;color:#5b7379}.intro{max-width:720px;margin:0}.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0 14px}label{display:block;font-size:14px;font-weight:650;margin-bottom:9px}input{width:100%;border-radius:12px;font:inherit;padding:13px;background:#fff;border:1px solid #adc3bc;color:#143640}input:focus,button:focus-visible{outline:3px solid #b5df63;outline-offset:2px}.actions{display:flex;flex-wrap:wrap;gap:10px}.button{border:0;border-radius:14px;background:#d6f48d;color:#183838;font:inherit;font-weight:750;padding:15px 20px;cursor:pointer;min-height:52px}.button:hover{background:#e2ffa5}.secondary{background:#e4ece8}.status{font-size:13px;min-height:20px;margin:12px 0 0}.table-wrap{overflow-x:auto;margin-top:22px;border:1px solid #d2dfd9;border-radius:16px}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{text-align:left;padding:13px 16px;border-bottom:1px solid #dce7e1}tr:last-child td{border-bottom:0}thead{background:#e8f0ea}th{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:#426461}tbody tr:nth-child(even){background:#f0f5f0}.reference-row{background:#e2f1c9!important;font-weight:750}.comparison-cell{min-width:200px;width:25%}.comparison-cell input{max-width:170px;padding:9px 11px}.comparison{display:block;min-height:18px;margin-top:5px;font-size:12px;font-weight:600;color:#567477}.comparison.above{color:#8a4b08}.comparison.below{color:#245a7a}.comparison.invalid{color:#ad342c}@media(max-width:720px){main{padding:16px}.card{padding:22px}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:430px){.form-grid{grid-template-columns:1fr}th,td{padding:11px 9px}}
-.measure-card{margin-top:18px}.measure-card h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.03em;margin:8px 0}.measure-table input{max-width:180px}.measure-table th:last-child,.measure-table td:last-child{text-align:right}.remove{border:0;background:#e4ece8;color:#143640;border-radius:9px;padding:8px 12px;cursor:pointer;font:inherit}.remove:hover{background:#d3dfd9}.summary{margin-top:18px;padding:16px 18px;border-radius:14px;background:#e2f1c9;color:#183838;font-weight:700}.summary[hidden]{display:none}.explain{font-size:13px;margin:14px 0 0}@media(max-width:430px){.measure-table input{min-width:75px;padding:10px 7px}.remove{padding:7px 9px}.measure-table th,.measure-table td{font-size:13px}}
+.locate-form{margin-top:22px}.locate-row{display:flex;align-items:end;gap:14px;flex-wrap:wrap}.locate-field{width:min(100%,250px)}.locate-result{font-weight:750;padding-bottom:13px}.locate-result:empty{display:none}.measure-card{margin-top:18px}.measure-card h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.03em;margin:8px 0}.measure-table input{max-width:180px}.measure-table th:last-child,.measure-table td:last-child{text-align:right}.remove{border:0;background:#e4ece8;color:#143640;border-radius:9px;padding:8px 12px;cursor:pointer;font:inherit}.remove:hover{background:#d3dfd9}.summary{margin-top:18px;padding:16px 18px;border-radius:14px;background:#e2f1c9;color:#183838;font-weight:700}.summary[hidden]{display:none}.explain{font-size:13px;margin:14px 0 0}@media(max-width:430px){.measure-table input{min-width:75px;padding:10px 7px}.remove{padding:7px 9px}.measure-table th,.measure-table td{font-size:13px}}
 </style>
 </head>
 <body><main><section class="card" aria-labelledby="title"><div class="label">Таблица здания</div><h1 id="title">Давление по этажам</h1><p class="intro">Укажите высоту этажа и давление на известном этаже — сайт рассчитает значения для всего здания.</p>
@@ -16,6 +16,7 @@
 <div><label for="count">Этажей в здании</label><input id="count" type="number" inputmode="numeric" min="1" max="300" step="1" required></div>
 </div><div class="actions"><button class="button" type="submit">Построить таблицу</button><button class="button secondary" type="button" id="useNative" hidden>Взять давление с iPhone</button></div><p class="status" id="status" role="status" aria-live="polite"></p></form>
 <div class="table-wrap"><table><thead><tr><th scope="col">Этаж</th><th scope="col">Высота от 1-го, м</th><th scope="col">Расчётное давление, гПа</th><th scope="col">Замер с телефона, гПа</th></tr></thead><tbody id="tableBody"></tbody></table></div>
+<form id="locateForm" class="locate-form" novalidate><div class="locate-row"><div class="locate-field"><label for="locatePressure">Сравнить с замером, гПа</label><input id="locatePressure" type="text" inputmode="decimal" placeholder="1013,2" aria-describedby="locateResult"></div><output id="locateResult" class="locate-result" aria-live="polite"></output></div></form>
 </section>
 <section class="card measure-card" aria-labelledby="measureTitle"><div class="label">По вашим измерениям</div><h2 id="measureTitle">Высота одного этажа</h2><p class="intro">Введите давление на двух или более известных этажах. Измеряйте одним телефоном и по возможности за короткое время.</p>
 <form id="measureForm" novalidate><div class="table-wrap"><table class="measure-table"><thead><tr><th scope="col">Этаж</th><th scope="col">Давление, гПа</th><th scope="col">Убрать</th></tr></thead><tbody id="measureBody"></tbody></table></div><div class="actions" style="margin-top:16px"><button class="button secondary" type="button" id="addMeasure">Добавить этаж</button><button class="button" type="submit">Рассчитать высоту</button></div><p class="status" id="measureStatus" role="status" aria-live="polite"></p></form>
@@ -42,6 +43,7 @@ let tableReadings = saved.tableReadings && typeof saved.tableReadings === 'objec
 let nativePressure = null;
 let nativeTime = 0;
 let averageHeight = null;
+let locateRequest = 0;
 const nativeReady = () => validPressure(nativePressure) && Date.now() - nativeTime < 15000;
 function persist() {
   try { localStorage.setItem(key, JSON.stringify(saved)); } catch (_) {}
@@ -128,6 +130,7 @@ async function renderTable(next) {
     if (input.value) updateComparison();
   }
   el('useNative').hidden = !nativeReady();
+  if (el('locatePressure').value.trim()) updateLocatedFloor();
 }
 for (const [id, value] of [
   ['step', config.step], ['referenceFloor', config.referenceFloor],
@@ -147,6 +150,32 @@ el('form').addEventListener('submit', async event => {
     el('status').textContent = error.message || 'Не удалось связаться с backend.';
   }
 });
+const locateInput = el('locatePressure');
+locateInput.value = typeof saved.locatePressure === 'string' ? saved.locatePressure : '';
+async function updateLocatedFloor() {
+  const request = ++locateRequest;
+  const raw = locateInput.value.trim();
+  const output = el('locateResult');
+  if (!raw) { output.textContent = ''; return; }
+  const measured = number(raw);
+  if (!validPressure(measured)) { output.textContent = 'Введите давление от 300 до 1100 гПа.'; return; }
+  output.textContent = 'Определяю этаж…';
+  try {
+    const result = await api('/api/locate', {...config, measuredPressure: measured});
+    if (request !== locateRequest) return;
+    output.textContent = result.withinBuilding
+      ? 'Предположительно ' + result.floor + '-й этаж (расчёт: ' + fmt(result.estimatedFloor, 1) + ').'
+      : 'Замер за пределами расчётного диапазона этажей (расчёт: ' + fmt(result.estimatedFloor, 1) + ').';
+  } catch (error) {
+    if (request === locateRequest) output.textContent = error.message || 'Не удалось определить этаж.';
+  }
+}
+locateInput.addEventListener('input', () => {
+  saved = {...saved, locatePressure: locateInput.value};
+  persist();
+  updateLocatedFloor();
+});
+el('locateForm').addEventListener('submit', event => { event.preventDefault(); updateLocatedFloor(); });
 el('useNative').addEventListener('click', () => {
   if (!nativeReady()) return;
   el('referencePressure').value = fmt(nativePressure, 2);
