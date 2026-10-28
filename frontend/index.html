@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102c3a">
+<title>Давление по этажам</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#143640;background:#102c3a}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 10%,#315d61 0,transparent 38%),linear-gradient(150deg,#102c3a,#14333d 58%,#0a2533)}main{max-width:1000px;margin:auto;padding:28px 24px 48px}.card{background:#f5f8f3;border-radius:26px;padding:30px;box-shadow:0 20px 60px #061b2740}.label{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#577879;font-weight:700}h1{font-size:clamp(27px,4vw,38px);letter-spacing:-.035em;margin:8px 0}p{line-height:1.55;color:#5b7379}.intro{max-width:720px;margin:0}.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0 14px}label{display:block;font-size:14px;font-weight:650;margin-bottom:9px}input{width:100%;border-radius:12px;font:inherit;padding:13px;background:#fff;border:1px solid #adc3bc;color:#143640}input:focus,button:focus-visible{outline:3px solid #b5df63;outline-offset:2px}.actions{display:flex;flex-wrap:wrap;gap:10px}.button{border:0;border-radius:14px;background:#d6f48d;color:#183838;font:inherit;font-weight:750;padding:15px 20px;cursor:pointer;min-height:52px}.button:hover{background:#e2ffa5}.secondary{background:#e4ece8}.status{font-size:13px;min-height:20px;margin:12px 0 0}.table-wrap{overflow-x:auto;margin-top:22px;border:1px solid #d2dfd9;border-radius:16px}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{text-align:left;padding:13px 16px;border-bottom:1px solid #dce7e1}tr:last-child td{border-bottom:0}thead{background:#e8f0ea}th{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:#426461}tbody tr:nth-child(even){background:#f0f5f0}.reference-row{background:#e2f1c9!important;font-weight:750}.comparison-cell{min-width:200px;width:25%}.comparison-cell input{max-width:170px;padding:9px 11px}.comparison{display:block;min-height:18px;margin-top:5px;font-size:12px;font-weight:600;color:#567477}.comparison.above{color:#8a4b08}.comparison.below{color:#245a7a}.comparison.invalid{color:#ad342c}@media(max-width:720px){main{padding:16px}.card{padding:22px}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:430px){.form-grid{grid-template-columns:1fr}th,td{padding:11px 9px}}
+.measure-card{margin-top:18px}.measure-card h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.03em;margin:8px 0}.measure-table input{max-width:180px}.measure-table th:last-child,.measure-table td:last-child{text-align:right}.remove{border:0;background:#e4ece8;color:#143640;border-radius:9px;padding:8px 12px;cursor:pointer;font:inherit}.remove:hover{background:#d3dfd9}.summary{margin-top:18px;padding:16px 18px;border-radius:14px;background:#e2f1c9;color:#183838;font-weight:700}.summary[hidden]{display:none}.explain{font-size:13px;margin:14px 0 0}@media(max-width:430px){.measure-table input{min-width:75px;padding:10px 7px}.remove{padding:7px 9px}.measure-table th,.measure-table td{font-size:13px}}
+</style>
+</head>
+<body><main><section class="card" aria-labelledby="title"><div class="label">Таблица здания</div><h1 id="title">Давление по этажам</h1><p class="intro">Укажите высоту этажа и давление на известном этаже — сайт рассчитает значения для всего здания.</p>
+<form id="form" novalidate><div class="form-grid">
+<div><label for="step">Высота между этажами, м</label><input id="step" type="text" inputmode="decimal" required></div>
+<div><label for="referenceFloor">Опорный этаж</label><input id="referenceFloor" type="number" inputmode="numeric" min="1" max="300" step="1" required></div>
+<div><label for="referencePressure">Давление на нём, гПа</label><input id="referencePressure" type="text" inputmode="decimal" required></div>
+<div><label for="count">Этажей в здании</label><input id="count" type="number" inputmode="numeric" min="1" max="300" step="1" required></div>
+</div><div class="actions"><button class="button" type="submit">Построить таблицу</button><button class="button secondary" type="button" id="useNative" hidden>Взять давление с iPhone</button></div><p class="status" id="status" role="status" aria-live="polite"></p></form>
+<div class="table-wrap"><table><thead><tr><th scope="col">Этаж</th><th scope="col">Высота от 1-го, м</th><th scope="col">Расчётное давление, гПа</th><th scope="col">Замер с телефона, гПа</th></tr></thead><tbody id="tableBody"></tbody></table></div>
+</section>
+<section class="card measure-card" aria-labelledby="measureTitle"><div class="label">По вашим измерениям</div><h2 id="measureTitle">Высота одного этажа</h2><p class="intro">Введите давление на двух или более известных этажах. Измеряйте одним телефоном и по возможности за короткое время.</p>
+<form id="measureForm" novalidate><div class="table-wrap"><table class="measure-table"><thead><tr><th scope="col">Этаж</th><th scope="col">Давление, гПа</th><th scope="col">Убрать</th></tr></thead><tbody id="measureBody"></tbody></table></div><div class="actions" style="margin-top:16px"><button class="button secondary" type="button" id="addMeasure">Добавить этаж</button><button class="button" type="submit">Рассчитать высоту</button></div><p class="status" id="measureStatus" role="status" aria-live="polite"></p></form>
+<div id="measureResult" hidden><div class="summary" id="measureSummary"></div><div class="table-wrap"><table><thead><tr><th scope="col">Между этажами</th><th scope="col">Перепад, гПа</th><th scope="col">Высота, м</th><th scope="col">В среднем на этаж, м</th></tr></thead><tbody id="measureResultBody"></tbody></table></div><p class="explain">Расчёт при температуре 20 °C: Δh ≈ 8581 × ln(Pнижнего / Pверхнего). Для высоты одного этажа разделите Δh на разницу номеров этажей.</p><button class="button secondary" type="button" id="applyHeight" style="margin-top:14px">Подставить среднюю высоту в таблицу выше</button></div>
+</section></main>
+<script>
+const el = id => document.getElementById(id);
+const key = 'barrometr-pressure-v1';
+const fmt = (n, digits = 1) => new Intl.NumberFormat('ru-RU', {maximumFractionDigits: digits}).format(n);
+const pressureFmt = n => new Intl.NumberFormat('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(n);
+const number = value => {
+  const cleaned = String(value).trim().replace(/\s/g, '').replace(',', '.');
+  return cleaned && /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(cleaned) ? Number(cleaned) : NaN;
+};
+const validPressure = value => Number.isFinite(value) && value >= 300 && value <= 1100;
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (_) {}
+if (window.BarrometrNativeInitialState && typeof window.BarrometrNativeInitialState === 'object')
+  saved = window.BarrometrNativeInitialState;
+let config = saved.tableConfig && typeof saved.tableConfig === 'object'
+  ? saved.tableConfig : {step: 4.2, referenceFloor: 2, referencePressure: 1014.2, count: 9};
+let tableReadings = saved.tableReadings && typeof saved.tableReadings === 'object' && !Array.isArray(saved.tableReadings)
+  ? {...saved.tableReadings} : {};
+let nativePressure = null;
+let nativeTime = 0;
+let averageHeight = null;
+const nativeReady = () => validPressure(nativePressure) && Date.now() - nativeTime < 15000;
+function persist() {
+  try { localStorage.setItem(key, JSON.stringify(saved)); } catch (_) {}
+  try { window.webkit?.messageHandlers?.barrometrStore?.postMessage(JSON.stringify(saved)); } catch (_) {}
+}
+async function api(path, payload) {
+  const response = await fetch(path, {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Ошибка расчёта.');
+  return data;
+}
+function showComparison(node, result) {
+  const difference = result.difference;
+  node.className = 'comparison';
+  if (result.direction === 'equal') {
+    node.textContent = 'Совпадает с расчётом';
+  } else {
+    node.textContent = (result.direction === 'above' ? 'Выше' : 'Ниже') +
+      ' расчёта на ' + fmt(Math.abs(difference), 2) + ' гПа';
+    node.classList.add(result.direction);
+  }
+}
+async function renderTable(next) {
+  const data = await api('/api/table', next);
+  config = next;
+  saved = {...saved, tableConfig: config};
+  persist();
+  const body = el('tableBody');
+  body.replaceChildren();
+  for (const item of data.rows) {
+    const row = document.createElement('tr');
+    if (item.floor === config.referenceFloor) row.className = 'reference-row';
+    const predicted = Number(item.pressure.toFixed(2));
+    for (const value of [String(item.floor), fmt(item.height), pressureFmt(predicted)]) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.append(cell);
+    }
+    const cell = document.createElement('td');
+    cell.className = 'comparison-cell';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.inputMode = 'decimal';
+    input.placeholder = '1013,7';
+    input.value = typeof tableReadings[item.floor] === 'string' ? tableReadings[item.floor] : '';
+    input.setAttribute('aria-label', 'Замер давления на ' + item.floor + '-м этаже, гПа');
+    const comparison = document.createElement('small');
+    comparison.className = 'comparison';
+    async function updateComparison() {
+      const raw = input.value.trim();
+      comparison.className = 'comparison';
+      if (!raw) { comparison.textContent = ''; return; }
+      const measured = number(raw);
+      if (!validPressure(measured)) {
+        comparison.textContent = 'Введите 300–1100 гПа';
+        comparison.classList.add('invalid');
+        return;
+      }
+      comparison.textContent = 'Сравниваю…';
+      try {
+        const result = await api('/api/compare', {
+          expectedPressure: predicted, measuredPressure: measured
+        });
+        if (input.value.trim() === raw && row.isConnected) showComparison(comparison, result);
+      } catch (error) {
+        if (input.value.trim() === raw && row.isConnected) {
+          comparison.textContent = error.message;
+          comparison.classList.add('invalid');
+        }
+      }
+    }
+    input.addEventListener('input', () => {
+      tableReadings[item.floor] = input.value;
+      saved = {...saved, tableReadings};
+      persist();
+      updateComparison();
+    });
+    cell.append(input, comparison);
+    row.append(cell);
+    body.append(row);
+    if (input.value) updateComparison();
+  }
+  el('useNative').hidden = !nativeReady();
+}
+for (const [id, value] of [
+  ['step', config.step], ['referenceFloor', config.referenceFloor],
+  ['referencePressure', config.referencePressure], ['count', config.count]
+]) el(id).value = typeof value === 'number' && !Number.isInteger(value) ? fmt(value, 2) : String(value);
+el('form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const next = {
+    step: number(el('step').value), referenceFloor: Number(el('referenceFloor').value),
+    referencePressure: number(el('referencePressure').value), count: Number(el('count').value),
+    time: Date.now()
+  };
+  try {
+    await renderTable(next);
+    el('status').textContent = 'Таблица построена.';
+  } catch (error) {
+    el('status').textContent = error.message || 'Не удалось связаться с backend.';
+  }
+});
+el('useNative').addEventListener('click', () => {
+  if (!nativeReady()) return;
+  el('referencePressure').value = fmt(nativePressure, 2);
+  el('form').requestSubmit();
+});
+const defaultMeasures = [
+  {floor: 2, pressure: 1014.2}, {floor: 3, pressure: 1013.7},
+  {floor: 4, pressure: 1013.2}
+];
+const measures = Array.isArray(saved.heightMeasures) && saved.heightMeasures.length >= 2
+  ? saved.heightMeasures : defaultMeasures;
+function addMeasure(floor = '', pressure = '') {
+  const row = document.createElement('tr');
+  const floorCell = document.createElement('td');
+  const pressureCell = document.createElement('td');
+  const removeCell = document.createElement('td');
+  const floorInput = document.createElement('input');
+  floorInput.type = 'number';
+  floorInput.min = '1'; floorInput.max = '300'; floorInput.step = '1';
+  floorInput.inputMode = 'numeric';
+  floorInput.value = String(floor);
+  floorInput.setAttribute('aria-label', 'Номер этажа');
+  const pressureInput = document.createElement('input');
+  pressureInput.type = 'text';
+  pressureInput.inputMode = 'decimal';
+  pressureInput.value = pressure === '' ? '' : fmt(Number(pressure), 2);
+  pressureInput.setAttribute('aria-label', 'Давление на этаже, гПа');
+  const remove = document.createElement('button');
+  remove.type = 'button'; remove.className = 'remove'; remove.textContent = '×';
+  remove.setAttribute('aria-label', 'Убрать этаж');
+  remove.addEventListener('click', () => {
+    if (el('measureBody').rows.length <= 2) return;
+    row.remove(); el('measureResult').hidden = true;
+  });
+  floorCell.append(floorInput); pressureCell.append(pressureInput); removeCell.append(remove);
+  row.append(floorCell, pressureCell, removeCell);
+  el('measureBody').append(row);
+}
+for (const reading of measures) addMeasure(reading.floor, reading.pressure);
+el('addMeasure').addEventListener('click', () => addMeasure());
+el('measureForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const rows = [...el('measureBody').rows].map(row => ({
+    floor: Number(row.cells[0].querySelector('input').value),
+    pressure: number(row.cells[1].querySelector('input').value)
+  }));
+  try {
+    const result = await api('/api/height', {measurements: rows});
+    const body = el('measureResultBody');
+    body.replaceChildren();
+    for (const item of result.intervals) {
+      const row = document.createElement('tr');
+      for (const value of [
+        item.lowerFloor + '–' + item.upperFloor, fmt(item.deltaPressure, 2),
+        fmt(item.height, 2), fmt(item.perFloor, 2)
+      ]) {
+        const cell = document.createElement('td');
+        cell.textContent = value;
+        row.append(cell);
+      }
+      body.append(row);
+    }
+    averageHeight = result.averageHeight;
+    el('measureSummary').textContent = 'Средняя высота этажа: ' + fmt(averageHeight, 2) + ' м';
+    el('measureResult').hidden = false;
+    el('measureStatus').textContent = 'Расчёт выполнен.';
+    saved = {...saved, heightMeasures: rows};
+    persist();
+  } catch (error) {
+    el('measureResult').hidden = true;
+    el('measureStatus').textContent = error.message || 'Не удалось связаться с backend.';
+  }
+});
+el('applyHeight').addEventListener('click', () => {
+  if (!Number.isFinite(averageHeight)) return;
+  el('step').value = fmt(averageHeight, 2);
+  el('form').requestSubmit();
+  el('form').scrollIntoView({behavior: 'smooth', block: 'start'});
+});
+window.BarrometrNativeReceivePressure = (pressureHpa, timestampMs) => {
+  const value = Number(pressureHpa), time = Number(timestampMs);
+  if (!validPressure(value) || !Number.isFinite(time) || Math.abs(Date.now() - time) > 15000) return;
+  nativePressure = value; nativeTime = time;
+  el('useNative').hidden = false;
+};
+window.BarrometrNativeSetError = () => {
+  nativePressure = null; nativeTime = 0; el('useNative').hidden = true;
+};
+renderTable(config).catch(error => {
+  el('status').textContent = error.message || 'Не удалось связаться с backend.';
+});
+setInterval(() => { el('useNative').hidden = !nativeReady(); }, 5000);
+</script></body></html>

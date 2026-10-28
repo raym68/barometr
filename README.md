@@ -16,7 +16,7 @@ python3 run_site.py
 Если порт 8000 занят, запустите вручную другой:
 
 ```bash
-python3 -m http.server 8001 --bind 127.0.0.1 --directory dist
+python3 run_site.py --port 8001
 ```
 
 Тогда адрес — [http://localhost:8001](http://localhost:8001).
@@ -30,10 +30,24 @@ python3 -m http.server 8001 --bind 127.0.0.1 --directory dist
 
 ## Файлы
 
-- `dist/index.html` — основная страница без сборки и внешних библиотек.
-- `dist/position.html` — экспериментальная страница для GPS, компаса и плана; откройте [http://localhost:8000/position.html](http://localhost:8000/position.html).
+- `frontend/index.html` — интерфейс таблиц и форм; обращается к Python API.
+- `frontend/position.html` — экспериментальная страница GPS и компаса; откройте [http://localhost:8000/position.html](http://localhost:8000/position.html).
+- `backend/calculations.py` — расчёты давления, высоты и сравнения замеров.
+- `backend/server.py` — локальный HTTP-сервер и API.
+- `backend/barometer.py` — отдельная Python-функция оценки высоты по давлению.
+- `dist/` — сохранённая статическая версия опубликованного сайта и iOS-приложения.
 - `ios/Barrometr.xcodeproj` — проект iOS-приложения; для запуска нужен Xcode и iPhone.
-- `barometer.py` — отдельная Python-функция оценки высоты по давлению.
-- `.openai/hosting.json` — настройки публикации существующего сайта.
+- `.openai/hosting.json` — настройки публикации статической версии.
 
 Локальный запуск и публикация сайта — разные процессы. Изменение локальных файлов не обновляет опубликованную версию автоматически.
+
+## API локального сервера
+
+Интерфейс и API работают на одном адресе. Сервер принимает JSON-запросы:
+
+- `POST /api/table` — `{ "step": 4.2, "referenceFloor": 2, "referencePressure": 1014.2, "count": 9 }`; возвращает таблицу этажей.
+- `POST /api/height` — `{ "measurements": [{ "floor": 2, "pressure": 1014.2 }, { "floor": 3, "pressure": 1013.7 }] }`; возвращает высоту по замерам.
+- `POST /api/compare` — `{ "expectedPressure": 1013.7, "measuredPressure": 1013.8 }`; возвращает разницу давлений.
+- `GET /api/health` — проверка работы сервера.
+
+Все расчёты выполняются в `backend/calculations.py`. Локальный сервер доступен только на этом компьютере (`127.0.0.1`). Опубликованный сайт пока использует статическую копию `dist/`; для переноса Python API в интернет потребуется отдельное размещение backend.

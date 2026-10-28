@@ -1,20 +1,17 @@
-"""Run the static site locally with Python's standard library."""
+"""Run the local frontend and Python API."""
 
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
-from functools import partial
+import argparse
+
+from backend.server import serve
 
 
 def main() -> None:
-    site_dir = Path(__file__).resolve().parent / "dist"
-    handler = partial(SimpleHTTPRequestHandler, directory=str(site_dir))
-    with ThreadingHTTPServer(("127.0.0.1", 8000), handler) as server:
-        print("Сайт открыт по адресу http://localhost:8000", flush=True)
-        print("Для остановки нажмите Ctrl+C.", flush=True)
-        try:
-            server.serve_forever()
-        except KeyboardInterrupt:
-            print("\nСервер остановлен.")
+    parser = argparse.ArgumentParser(description="Локальный сайт Барометр")
+    parser.add_argument("--port", type=int, default=8000, help="порт (по умолчанию 8000)")
+    args = parser.parse_args()
+    if not 1 <= args.port <= 65535:
+        parser.error("порт должен быть от 1 до 65535")
+    serve(args.port)
 
 
 if __name__ == "__main__":
